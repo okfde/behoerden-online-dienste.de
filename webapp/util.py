@@ -692,6 +692,38 @@ def import_basic_services():
       'make_ssl_test': 1,
       'service_group_id': 3
     },
+    22: {
+      'name': u'Bewohner-Parkausweis',
+      'fa_icon': 'car',
+      'descr_short': 'Bewohner-Parkausweis online beantragen',
+      'descr': '',
+      'make_ssl_test': 1,
+      'service_group_id': 2
+    },
+    23: {
+      'name': u'Haushalt-Daten',
+      'fa_icon': 'umbrella',
+      'descr_short': 'Fundsachen online einsehen.',
+      'descr': '',
+      'make_ssl_test': 1,
+      'service_group_id': 3
+    },
+    24: {
+      'name': u'Gewerberegister',
+      'fa_icon': 'industry',
+      'descr_short': 'Öffentliches Gewerberegister.',
+      'descr': '',
+      'make_ssl_test': 1,
+      'service_group_id': 3
+    },
+    25: {
+      'name': u'Flüchtlingshilfe',
+      'fa_icon': 'info-circle',
+      'descr_short': 'Übersicht für Flüchtende und Helfer.',
+      'descr': '',
+      'make_ssl_test': 1,
+      'service_group_id': 1
+    }
   }
   for key, service_item in service_data.iteritems():
     service = Service()
@@ -720,18 +752,22 @@ def import_onlinecheck():
     14: 6, # Personalausweis-Status
     16: 7, # Urkunden-Bestellung
     18: 8, # Gewerbe-Anmeldung
-    20: 9, # Hunde-Anmeldung
-    22: 10, # Vergabe-Plattform
-    24: 11, # Termin-Buchung
-    26: 21, # Fundbüro
-    28: 12, # Kita-Anmeldung
+    20: 22, #Bewohner-Parkausweis
+    22: 9, # Hunde-Anmeldung
+    24: 10, # Vergabe-Plattform
+    26: 11, # Termin-Buchung
+    28: 21, # Fundbüro
+    30: 12, # Kita-Anmeldung
     36: 13, # Verwaltungs-App
-    40: 14, # Wahldaten
+    40: 23, # Haushalt
+    44: 14, # Wahldaten
+    60: 24, # Gewerberegister
     62: 15, # Statistiken
     64: 16, # OpenData-Portal
     68: 17, # Anliegen-Management
     78: 18, # Facebook
     80: 19, # Twitter
+    88: 25, # Flüchtlingshilfe
     94: 20 # Responsive
   }
   
