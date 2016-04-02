@@ -1,0 +1,14 @@
+config.py
+*.py[cod]
+
+*.komodoedit
+.komodotools
+
+.DS_Store
+._*
+*~
+
+venv
+migrations
+import/*
+

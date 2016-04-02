@@ -1,0 +1,89 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}Behörden Online Dienste{% endblock %}
+
+{% block head %}
+{{super()}}
+<meta charset="utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+<meta name="description" content="{% block meta_description %}{% endblock %}" />
+<meta name="publisher" content="sectio-aurea.org" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta property="og:title" content="Behörden Online Dienste" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://behorden-online-dienste.de/" />
+<meta property="og:image" content="https://behorden-online-dienste.de/static/img/og.jpg" />
+<meta property="og:description" content="Welche Online-Dienstleistungen bietet meine Stadt, mein Dorf, mein Landkreis? Wie sicher ist das? Diese Fragen sollen auf behoerden-online-dienste.de beantwortet werden." />
+
+
+<link rel="icon" type="image/vnd.microsoft.icon" href="/static/img/favicon.ico" />
+<link rel="shortcut icon" type="image/vnd.microsoft.icon" href="/static/img/favicon.ico" />
+{% endblock %}
+
+{% block styles %}
+<style>
+  body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+  }
+</style>
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='lib/font-awesome/4.5.0/css/font-awesome.css')}}">
+<link rel="stylesheet" href="{{url_for('.static', filename='css/default.css')}}?v=0.0.1">
+{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-inverse navbar-fixed-top" id="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#menu-collapse">
+        <span class="sr-only">Navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Behörden Online Dienste <sup>beta</sup></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/">Start</a></li>
+        <li><a href="/faq">FAQ</a></li>
+        <li><a href="/impress">Impressum</a></li>
+        <li><a href="/privacy">Datenschutz</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+
+{% block scripts %}
+<hr />
+<footer class="footer">
+  <div class="container">
+    <p class="text-muted" style="text-align: center;">Behörden Online Dienste ist ein Projekt von <a href="https://sectio-aurea.org/">sectio-aurea.org</a>. Kontakt: Ernesto Ruge, <a href="mailto:mail@ernestoruge.de">mail@ernestoruge.de</a></p>
+  </div>
+</footer>
+{{super()}}
+<script src="{{url_for('.static', filename='js/default.js')}}?v=0.0.1"></script>
+<!-- Piwik -->
+<script type="text/javascript">
+  var _paq = _paq || [];
+  _paq.push(["setDomains", ["*.behoerden-online-dienste.de"]]);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//piwik.sectio-aurea.org/";
+    _paq.push(['setTrackerUrl', u+'piwik.php']);
+    _paq.push(['setSiteId', 84]);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<noscript><p><img src="//piwik.sectio-aurea.org/piwik.php?idsite=84" style="border:0;" alt="" /></p></noscript>
+<!-- End Piwik Code -->
+{% endblock %}

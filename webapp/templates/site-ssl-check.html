@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+
+{% block scripts %}
+{{super()}}
+<script src="{{url_for('.static', filename='js/site-ssl-check-result.js')}}?v=0.0.1"></script>
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+  <div class="container">
+    <h1>SSL-Check Ihrer Website</h1>
+  </div>
+</div>
+<div class="container">
+  {% include 'messages.html' %}
+  <form role="form" action="/site-ssl-check" method="POST">
+    <div class="row-fluid">
+      <div class="col-md-12">
+        <h2>{{ site_ssl_check.website.label }}</h2>
+        <div class="form-group{% if site_ssl_check.website.errors %} has-error{% endif %}">
+          {{ site_ssl_check.website(class_="form-control", placeholder="z.B. https://www.beispiel.de/")|safe }}
+          <p>{% if site_ssl_check.website.errors %}{% for error in site_ssl_check.website.errors %}{{ error }}{% endfor %}{% else %}{{ site_ssl_check.website.description }}{% endif %}</p>
+        </div>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="col-md-6">
+        <h2>{{ site_ssl_check.hoster.label }}</h2>
+        <div class="form-group{% if site_ssl_check.hoster.errors %} has-error{% endif %}">
+          {{ site_ssl_check.hoster(class_="form-control", placeholder="")|safe }}
+          <p>{% if site_ssl_check.hoster.errors %}{% for error in site_ssl_check.hoster.errors %}{{ error }}{% endfor %}{% else %}{{ site_ssl_check.hoster.description }}{% endif %}</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h2>{{ site_ssl_check.type.label }}</h2>
+        <div class="form-group{% if site_ssl_check.type.errors %} has-error{% endif %}">
+          {{ site_ssl_check.type(class_="form-control")|safe }}
+          <p>{% if site_ssl_check.type.errors %}{% for error in site_ssl_check.type.errors %}{{ error }}{% endfor %}{% else %}{{ site_ssl_check.type.description }}{% endif %}</p>
+        </div>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="col-md-6">
+        <h2>{{ site_ssl_check.service_name.label }}</h2>
+        <div class="form-group{% if site_ssl_check.service_name.errors %} has-error{% endif %}">
+          {{ site_ssl_check.service_name(class_="form-control", placeholder="z.B. Private Plus")|safe }}
+          <p>{% if site_ssl_check.service_name.errors %}{% for error in site_ssl_check.service_name.errors %}{{ error }}{% endfor %}{% else %}{{ site_ssl_check.service_name.description }}{% endif %}</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h2>{{ site_ssl_check.service_start.label }}</h2>
+        <div class="form-group{% if site_ssl_check.service_start.errors %} has-error{% endif %}">
+          {{ site_ssl_check.service_start(class_="form-control", placeholder="z.B. Dezember 2014")|safe }}
+          <p>{% if site_ssl_check.service_start.errors %}{% for error in site_ssl_check.service_start.errors %}{{ error }}{% endfor %}{% else %}{{ site_ssl_check.service_start.description }}{% endif %}</p>
+        </div>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="col-md-12">
+        <div class="form-group form-checkbox{% if site_ssl_check.legal.errors %} has-error{% endif %}" style="margin: 20px 0px 10px 0;">
+          {{ site_ssl_check.legal|safe }}{{ site_ssl_check.legal.label(class_="checkbox-label") }}
+        </div>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="col-md-12" style="text-align: center;">
+        <button type="submit" class="btn btn-primary btn-lg" style="margin-top: 15px;">Website SSL-Check jetzt starten</button>
+      </div>
+    </div>
+    <div class="hidden">
+      {{ site_ssl_check.csrf_token }}
+    </div>
+  </form>
+</div>
+{% endblock %}

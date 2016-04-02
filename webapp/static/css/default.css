@@ -1,0 +1,153 @@
+
+#region-host-form {
+  display: none;
+}
+
+.navbar-brand sup {
+  font-style: italic;
+}
+
+.row-fluid {
+  clear: both;
+}
+
+.checkbox-label {
+  margin: 2px 0 0 5px;
+}
+
+.form-checkbox {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-checkbox.has-error {
+  border-color: #a94442;
+}
+
+.col-rating {
+  font-size: 60px;
+  text-align: center;
+}
+
+.col-rating span {
+  margin: 0 10px;
+  line-height: 60px;
+}
+
+.col-rating .fa-plus-circle {
+  color: #5cb85c;
+}
+
+.col-rating .fa-circle-o {
+  color: #f0ad4e;
+}
+/* info: #5bc0de */
+
+.col-rating .fa-minus-circle {
+  color: #d9534f;
+}
+
+#flash-messages li {
+  list-style: none;
+  text-align: center;
+  padding: 2px;
+}
+
+#flash-messages i {
+  margin-left: 10px;
+}
+
+#flash-messages li.error {
+  background-color: #FFCCCC;
+  border: 1px solid #990000;
+}
+
+#flash-messages li.info {
+  background-color: #FFFFCC;
+  border: 1px solid #FFFF00;
+}
+
+#flash-messages li.success {
+  background-color: #CCFFCC;
+  border: 1px solid #009900;
+}
+
+
+/* INDEX */
+
+#fsrt {
+  position: relative;
+}
+
+#fsrtl {
+  position: absolute;
+  left: 15px;
+  right: 15px;
+  top: 35px;
+  background-color: #FFFFFF;
+  z-index: 1000;
+}
+
+#fsrtl ul {
+  padding: 0;
+  border: 1px solid #999999;
+  border-top: 0;
+}
+
+#fsrtl li {
+  list-style: none;
+  cursor: pointer;
+  padding: 3px 5px;
+}
+
+#fsrtl li.highlighted {
+  background-color: #999999;
+}
+
+/* REGION */
+
+.clear-all {
+  clear: both;
+}
+
+.col-rating-ssl-1 i, .col-rating-ssl-2 i {
+  color: #A94442;
+}
+
+.col-rating-ssl-3 i {
+  color: #8A6d3B;
+}
+
+.col-rating-ssl-4 i, .col-rating-ssl-5 i {
+  color: #3C763D;
+}
+
+.col-rating-ssl-5 .fa-plus {
+  font-size: 18px;
+  vertical-align: text-top;
+}
+
+@media only screen and (max-width: 767px) {
+  .clear-xs {
+    clear: both;
+  }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+  .clear-sm-0 {
+    clear: both;
+  }
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+  .clear-md-0 {
+    clear: both;
+  }
+}
+
+@media (min-width: 1200px) {
+  .clear-lg-0 {
+    clear: both;
+  }
+}

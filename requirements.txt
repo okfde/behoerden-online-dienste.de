@@ -1,0 +1,13 @@
+Flask
+Flask-Bootstrap
+Flask-Security
+Flask-Script
+Flask-SQLAlchemy
+Flask-Migrate
+Flask-Basicauth
+Flask-Cache
+mysql-python
+python-memcached
+translitcodec
+Flask-Elasticsearch
+dnspython
