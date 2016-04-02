@@ -502,6 +502,213 @@ def import_wikidata_sites_process(item, region):
     db.session.commit()
 
 
+def import_basic_services():
+  service_group_data = {
+    1: {
+      'name': 'Allgemein'
+    },
+    2: {
+      'name': 'eGovernment-Dienste'
+    },
+    3: {
+      'name': 'Daten-Dienste'
+    }
+  }
+  for key, service_group_item in service_group_data.iteritems():
+    service_group = ServiceGroup()
+    service_group.created = datetime.datetime.now()
+    service_group.updated = datetime.datetime.now()
+    service_group.active = 1
+    service_group.name = service_group_item['name']
+    db.session.add(service_group)
+    db.session.commit()
+    
+  service_data = {
+    1: {
+      'name': 'Website',
+      'fa_icon': 'globa',
+      'descr_short': 'Die Website.',
+      'descr': '',
+      'make_ssl_test': 1,
+      'service_group_id': 1
+    },
+    2: {
+      'name': 'Ratsinformationssystem',
+      'fa_icon': 'file-text',
+      'descr_short': 'Dokumentation aller politischen Entscheidungen.',
+      'descr': '',
+      'make_ssl_test': 1,
+      'service_group_id': 3
+    },
+    3: {
+      'name': 'Wunschkennzeichen',
+      'fa_icon': 'car',
+      'descr_short': 'Wunschkennzeichen online beantragen.',
+      'descr': '',
+      'make_ssl_test': 1,
+      'service_group_id': 2
+    },
+    4: {
+      'name': 'Bauantrag',
+      'fa_icon': 'home',
+      'descr_short': 'Bauantrag online stellen.',
+      'descr': '',
+      'make_ssl_test': 1,
+      'service_group_id': 2
+    },
+    5: {
+      'name': 'Bibliothek',
+      'fa_icon': 'book',
+      'descr_short': 'Online Katalog einsehen und Bücher ausleihen.',
+      'descr': '',
+      'make_ssl_test': 1,
+      'service_group_id': 2 
+    },
+    6: {
+      'name': 'Dokumenten-Status',
+      'fa_icon': 'file',
+      'descr_short': 'Online-Check, ob z.B. der Personalausweis fertiggestellt wurde.',
+      'descr': '',
+      'make_ssl_test': 1,
+      'service_group_id': 2
+    },
+    7: {
+      'name': 'Urkunden-Bestellung',
+      'fa_icon': 'file-text',
+      'descr_short': 'Urkunden online bestellen',
+      'descr': '',
+      'make_ssl_test': 1,
+      'service_group_id': 2
+    },
+    8: {
+      'name': 'Gewerbe-Anmeldung',
+      'fa_icon': 'industry',
+      'descr_short': 'Gewerbe online anmelden.',
+      'descr': '',
+      'make_ssl_test': 1,
+      'service_group_id': 2
+    },
+    9: {
+      'name': 'Hunde-Anmeldung',
+      'fa_icon': 'paw',
+      'descr_short': 'Hund online anmelden.',
+      'descr': '',
+      'make_ssl_test': 1,
+      'service_group_id': 2
+    },
+    10: {
+      'name': 'Vergabe-Plattform',
+      'fa_icon': 'briefcase',
+      'descr_short': 'Eigene Vergabe-Plattform.',
+      'descr': '',
+      'make_ssl_test': 1,
+      'service_group_id': 3
+    },
+    11: {
+      'name': 'Termin-Buchung',
+      'fa_icon': 'calendar',
+      'descr_short': 'Termin für Behördengang buchen.',
+      'descr': '',
+      'make_ssl_test': 1,
+      'service_group_id': 2
+    },
+    12: {
+      'name': 'Kita-Anmeldung',
+      'fa_icon': 'child',
+      'descr_short': 'Online Kita finden und Kind anmelden',
+      'descr': '',
+      'make_ssl_test': 1,
+      'service_group_id': 2
+    },
+    13: {
+      'name': 'Smartphone-App',
+      'fa_icon': 'mobile',
+      'descr_short': 'Smartphone-Applikation der Verwaltung.',
+      'descr': '',
+      'make_ssl_test': 0,
+      'service_group_id': 1
+    },
+    14: {
+      'name': 'Wahldaten',
+      'fa_icon': 'pie-chart',
+      'descr_short': 'Die Ergebnisse der vergangenen Wahlen.',
+      'descr': '',
+      'make_ssl_test': 1,
+      'service_group_id': 3
+    },
+    15: {
+      'name': 'Statistiken',
+      'fa_icon': 'bar-chart',
+      'descr_short': 'Wissenswerte Zahlen.',
+      'descr': '',
+      'make_ssl_test': 1,
+      'service_group_id': 3
+    },
+    16: {
+      'name': 'OpenData-Portal',
+      'fa_icon': 'database',
+      'descr_short': 'Portal mit offenen Daten.',
+      'descr': '',
+      'make_ssl_test': 1,
+      'service_group_id': 3
+    },
+    17: {
+      'name': 'Anliegen-Management',
+      'fa_icon': 'commenting',
+      'descr_short': 'Vorschläge einsehen und melden.',
+      'descr': '',
+      'make_ssl_test': 1,
+      'service_group_id': 2
+    },
+    18: {
+      'name': 'Facebook',
+      'fa_icon': 'facebook',
+      'descr_short': 'Facebook-Präsenz.',
+      'descr': '',
+      'make_ssl_test': 0,
+      'service_group_id': 1
+    },
+    19: {
+      'name': 'Twitter',
+      'fa_icon': 'twitter',
+      'descr_short': 'Twitter-Account.',
+      'descr': '',
+      'make_ssl_test': 0,
+      'service_group_id': 1
+    },
+    20: {
+      'name': 'Responsive',
+      'fa_icon': 'mobile',
+      'descr_short': 'Smartphone-Optimierte Website.',
+      'descr': '',
+      'make_ssl_test': 1,
+      'service_group_id': 1
+    },
+    21: {
+      'name': u'Fundbüro',
+      'fa_icon': 'umbrella',
+      'descr_short': 'Fundsachen online einsehen.',
+      'descr': '',
+      'make_ssl_test': 1,
+      'service_group_id': 3
+    },
+  }
+  for key, service_item in service_data.iteritems():
+    service = Service()
+    service.created = datetime.datetime.now()
+    service.updated = datetime.datetime.now()
+    service.active = 1
+    service.name = service_item['name']
+    service.fa_icon = service_item['fa_icon']
+    service.descr_short = service_item['descr_short']
+    service.descr = service_item['descr']
+    service.make_ssl_test = service_item['make_ssl_test']
+    service.service_group_id = service_item['service_group_id']
+    db.session.add(service)
+    db.session.commit()
+  
+
+
 def import_onlinecheck():
   # mapping
   mapping = {

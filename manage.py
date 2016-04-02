@@ -31,6 +31,10 @@ def import_osm():
   util.import_osm()
 
 @manager.command
+def import_basic_services():
+  util.import_basic_services()
+
+@manager.command
 def host_ssl_check(host_id):
   util.update_host_check(host_id)
 

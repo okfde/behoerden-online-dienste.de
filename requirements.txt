@@ -11,3 +11,5 @@ python-memcached
 translitcodec
 Flask-Elasticsearch
 dnspython
+unicodecsv
+lxml
