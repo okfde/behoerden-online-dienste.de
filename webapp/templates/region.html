@@ -65,7 +65,7 @@
   {% for host in hosts %}
   <div class="row-fluid">
     <div class="col-sm-2 col-rating col-rating-ssl-{% if host.ssl_result %}{{ host.ssl_result }}{% else %}0{% endif %}">
-      <i class="fa fa-{% if host.ssl_result == 1 %}unlock{% elif host.ssl_result %}lock{% else %}question-circle{% endif %}"></i>{% if host.ssl_result == 5 %}<i class="fa fa-plus"></i>{% endif %}
+      <i class="fa fa-{% if host.ssl_result == 1 %}unlock{% elif host.ssl_result %}lock{% else %}question-circle{% endif %}"></i>{% if host.ssl_result == 6 %}<i class="fa fa-plus"></i>{% elif host.ssl_result == 2 %}<i class="fa fa-minus"></i>{% endif %}
     </div>
     <div>
       <h3><a href="/host/{{ host.host }}">{{ host.host }}</a></h3>

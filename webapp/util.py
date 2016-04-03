@@ -66,19 +66,22 @@ def get_reverse_hostname(ip):
     return False
 
 def get_sslyze(host):
-  result = {}
+  result = {
+    'ssl_ok': 1
+  }
   ciphers = []
   data, error = subprocess.Popen(
-    ['python', app.config['SSLYZE_PATH'], '--xml_out=-', '--regular', '--hsts', '--sni=' + host,  host],
+    ['python', app.config['SSLYZE_PATH'], '--xml_out=-', '--regular', '--hsts', '--timeout=20', '--sni=' + host,  host],
     stdout=subprocess.PIPE,
     stderr=subprocess.PIPE).communicate()
-  
+  if not data:
+    return {'ssl_ok': 0}
   parser = etree.XMLParser(recover=True)
   tree = etree.fromstring(data, parser=parser)
   for leaf in tree:
     if leaf.tag == 'invalidTargets':
       if len(leaf):
-        if leaf[0] == 'Could not complete an SSL handshake':
+        if leaf[0].attrib['error'] == 'Could not complete an SSL handshake':
           return {'ssl_ok': 0}
     elif leaf.tag == 'results':
       for target in leaf:
@@ -108,10 +111,12 @@ def get_sslyze(host):
               else:
                 result['heartbleed'] = False
             elif module.tag == 'hsts':
-              if module[0].attrib['isSupported'] == 'True':
-                result['hsts_available'] = True
-              else:
-                result['hsts_available'] = False
+              for child in module:
+                if child.tag == 'httpStrictTransportSecurity':
+                  if child.attrib['isSupported'] == 'True':
+                    result['hsts_available'] = True
+                  else:
+                    result['hsts_available'] = False
             elif module.tag == 'reneg':
               for child in module:
                 if child.tag == 'sessionRenegotiation':
@@ -173,6 +178,8 @@ def get_sslyze(host):
           print "Unknown host: %s" % target.attrib['host']
     else:
       print "Unknown leaf: %s" % leaf.tag
+  if not result['ssl_ok']:
+    return result
   cipher_string = ' '.join(ciphers)
   if result['tlsv1_2_available']:
     result['protocol_best'] = 'tlsv1_2'
@@ -187,10 +194,13 @@ def get_sslyze(host):
   result['rc4_available'] = 'RC4' in cipher_string
   result['md5_available'] = 'MD5' in cipher_string
   result['pfs_available'] = 'ECDHE_' in cipher_string or 'DHE_' in cipher_string
+  result['anon_suite_available'] = 'anon_' in cipher_string
   result['ssl_ok'] = 1
   return result
 
 def ssl_protocols(host, module, result, ciphers, current_protocol):
+  if 'isProtocolSupported' not in module.attrib:
+    return ({'ssl_ok': 0}, '')
   if module.attrib['isProtocolSupported'] == "True":
     result['protocol_num'] += 1
     result['%s_available' % current_protocol] = True
@@ -205,7 +215,7 @@ def ssl_protocols(host, module, result, ciphers, current_protocol):
       result['%s_cipher_suites_accepted' % current_protocol] = []
       for cipher_suite in child:
         result['%s_cipher_suites_accepted' % current_protocol].append(cipher_suite.attrib['name'])
-        if len(cipher_suite) and ('DHE_' == cipher_suite.attrib['name'][0:4] or 'TLS_DHE_' == cipher_suite.attrib['name'][0:8] or 'EXP_EDH_' in cipher_suite.attrib['name'] or 'EDH-' == cipher_suite.attrib['name'][0:4]):
+        if len(cipher_suite) and ('DHE_' == cipher_suite.attrib['name'][0:4] or 'TLS_DHE_' == cipher_suite.attrib['name'][0:8] or 'EXP_EDH_' in cipher_suite.attrib['name'] or 'EDH_' == cipher_suite.attrib['name'][0:4] or 'TLS_DH_' == cipher_suite.attrib['name'][0:7]):
           if cipher_suite[0].tag == 'keyExchange':
             if 'dhe_key' in result:
               if int(cipher_suite[0].attrib['GroupSize']) < result['dhe_key']:
@@ -214,7 +224,7 @@ def ssl_protocols(host, module, result, ciphers, current_protocol):
               result['dhe_key'] = int(cipher_suite[0].attrib['GroupSize'])
           else:
             print "Unknown data in cipherSuite %s" % etree.tostring(cipher_suite)
-        elif len(cipher_suite) and 'ECDHE_' in cipher_suite.attrib['name']:
+        elif len(cipher_suite) and ('ECDHE_' in cipher_suite.attrib['name'] or 'TLS_ECDH_' in cipher_suite.attrib['name']):
           if cipher_suite[0].tag == 'keyExchange':
             if 'ecdhe_key' in result:
               if int(cipher_suite[0].attrib['GroupSize']) < result['ecdhe_key']:
@@ -253,10 +263,14 @@ EXP-RC2-CBC-MD5         SSLv3 Kx=RSA(512) Au=RSA  Enc=RC2(40)   Mac=MD5  export
 EXP-RC4-MD5             SSLv3 Kx=RSA(512) Au=RSA  Enc=RC4(40)   Mac=MD5  export
 """
 
-def update_site_checks():
-  hosts = Host.query.filter_by(active=1).all()
+def ssl_check(start_with=None):
+  hosts = Host.query.filter_by(active=1)
+  if start_with:
+    hosts = hosts.filter(Host.id >= start_with)
+  hosts = hosts.order_by(Host.id).all()
   for host in hosts:
-    update_site_check(host.id)
+    print "check ID %s: %s" % (host.id, host.host)
+    update_host_check(host.id)
 
 def update_host_check(host_id):
   host = Host.query.filter_by(id=host_id).first()
@@ -271,56 +285,61 @@ def update_host_check(host_id):
   test_result.host = host.host
   test_result.ip = host.ip
   
-  # 1 = nicht existent, 2 = rot, 3 = gelb, 4 = grün, 5 = grünplus
+  # 1 = nicht existent, 2 = rotminus, 3 = rot, 4 = gelb, 5 = grün, 6 = grünplus
   summary = 1
   
   # if yes: check ssl avaiable
   if result['port_443_available']:
     test_result.port_443_available = result['port_443_available']
     result.update(get_sslyze(host.host))
+
     if 'ssl_ok' in result:
       test_result.ssl_ok = result['ssl_ok']
       if test_result.ssl_ok:
         if 'cert_matches' in result:
           test_result.cert_matches = result['cert_matches']
           if test_result.cert_matches:
-            summary = 5
+            summary = 6
             if 'rc4_available' in result:
               test_result.rc4_available = result['rc4_available']
-              if test_result.rc4_available and summary > 2:
-                summary = 2
+              if test_result.rc4_available and summary > 4:
+                summary = 4
             if 'md5_available' in result:
               test_result.md5_available = result['md5_available']
-              if test_result.md5_available and summary > 2:
-                summary = 2
+              if test_result.md5_available and summary > 4:
+                summary = 4
+            if 'anon_suite_available' in result:
+              test_result.anon_suite_available = result['anon_suite_available']
+              if test_result.anon_suite_available and summary > 3:
+                summary = 3
             if 'dhe_key' in result:
               test_result.dhe_key = result['dhe_key']
               if test_result.dhe_key < 2048 and summary > 4:
                 summary = 4
-              if test_result.dhe_key < 1024 and summary > 2:
-                summary = 2
+              if test_result.dhe_key < 1024 and summary > 3:
+                summary = 3
             if 'ecdhe_key' in result:
               test_result.ecdhe_key = result['ecdhe_key']
               if test_result.ecdhe_key < 256 and summary > 4:
                 summary = 4
             if 'fallback_scsv_available' in result:
               test_result.fallback_scsv_available = result['fallback_scsv_available']
-              if not test_result.fallback_scsv_available and summary > 4:
-                summary = 4
+              if not test_result.fallback_scsv_available and summary > 5:
+                summary = 5
             if 'protocol_num' in result:
               test_result.protocol_num = result['protocol_num']
             if 'protocol_best' in result:
               test_result.protocol_best = result['protocol_best']
-              if (test_result.protocol_best == 'tlsv1_1' or test_result.protocol_best == 'tlsv1') and summary > 3:
-                summary = 3
+              if (test_result.protocol_best == 'tlsv1_1' or test_result.protocol_best == 'tlsv1') and summary > 4:
+                summary = 4
             if 'hsts_available' in result:
               test_result.hsts_available = result['hsts_available']
-              if not test_result.hsts_available and summary > 4:
-                summary = 4
+              if not test_result.hsts_available and summary > 5:
+                summary = 5
             if 'session_renegotiation_secure' in result:
               test_result.session_renegotiation_secure = result['session_renegotiation_secure']
-              if not test_result.session_renegotiation_secure and summary > 2:
-                summary = 2
+              if not test_result.session_renegotiation_secure and summary > 3:
+                summary = 3
             if 'session_renegotiation_client' in result:
               test_result.session_renegotiation_client = result['session_renegotiation_client']
             if 'heartbleed' in result:
@@ -329,14 +348,14 @@ def update_host_check(host_id):
                 summary = 2
             if 'sha1_cert' in result:
               test_result.sha1_cert = result['sha1_cert']
-              if test_result.sha1_cert and summary > 3:
-                summary = 3
+              if test_result.sha1_cert and summary > 4:
+                summary = 4
             if 'ocsp_stapling' in result:
               test_result.ocsp_stapling = result['ocsp_stapling']
             if 'pfs_available' in result:
               test_result.pfs_available = result['pfs_available']
-              if not test_result.pfs_available and summary > 3:
-                summary = 3
+              if not test_result.pfs_available and summary > 4:
+                summary = 4
             
             if 'sslv2_available' in result:
               test_result.sslv2_available = result['sslv2_available']
@@ -344,8 +363,8 @@ def update_host_check(host_id):
                 summary = 2
             if 'sslv3_available' in result:
               test_result.sslv3_available = result['sslv3_available']
-              if test_result.sslv3_available and summary > 2:
-                summary = 2
+              if test_result.sslv3_available and summary > 3:
+                summary = 3
             if 'tlsv1_available' in result:
               test_result.tlsv1_available = result['tlsv1_available']
             if 'tlsv1_1_available' in result:
@@ -370,10 +389,22 @@ def update_host_check(host_id):
               test_result.sslv3_cipher_suites_preferred = ', '.join(result['sslv3_cipher_suites_preferred'])
             if 'tlsv1_cipher_suites_preferred' in result:
               test_result.tlsv1_cipher_suites_preferred = ', '.join(result['tlsv1_cipher_suites_preferred'])
+              if ('RC4' in test_result.tlsv1_cipher_suites_preferred or (not len(test_result.tlsv1_cipher_suites_preferred) and 'RC4' in test_result.tlsv1_cipher_suites_accepted)) and summary > 3:
+                summary = 3
+              if ('MD5' in test_result.tlsv1_cipher_suites_preferred or (not len(test_result.tlsv1_cipher_suites_preferred) and 'MD5' in test_result.tlsv1_cipher_suites_accepted)) and summary > 3:
+                summary = 3
             if 'tlsv1_1_cipher_suites_preferred' in result:
               test_result.tlsv1_1_cipher_suites_preferred = ', '.join(result['tlsv1_1_cipher_suites_preferred'])
+              if ('RC4' in test_result.tlsv1_1_cipher_suites_preferred or (not len(test_result.tlsv1_1_cipher_suites_preferred) and 'RC4' in test_result.tlsv1_1_cipher_suites_accepted)) and summary > 3:
+                summary = 3
+              if ('MD5' in test_result.tlsv1_1_cipher_suites_preferred or (not len(test_result.tlsv1_1_cipher_suites_preferred) and 'MD5' in test_result.tlsv1_1_cipher_suites_accepted)) and summary > 3:
+                summary = 3
             if 'tlsv1_2_cipher_suites_preferred' in result:
               test_result.tlsv1_2_cipher_suites_preferred = ', '.join(result['tlsv1_2_cipher_suites_preferred'])
+              if ('RC4' in test_result.tlsv1_2_cipher_suites_preferred or (not len(test_result.tlsv1_2_cipher_suites_preferred) and 'RC4' in test_result.tlsv1_2_cipher_suites_accepted)) and summary > 3:
+                summary = r
+              if ('MD5' in test_result.tlsv1_2_cipher_suites_preferred or (not len(test_result.tlsv1_2_cipher_suites_preferred) and 'MD5' in test_result.tlsv1_2_cipher_suites_accepted)) and summary > 3:
+                summary = 3
 
   host.ssl_result = summary
   
@@ -489,6 +520,8 @@ def import_wikidata_sites_process(item, region):
       service_site.active = 1
       service_site.region_id = region.id
       service_site.service_id = 1
+      service_site.quality_show = 1
+      service_site.quality = 'online'
     else:
       service_site = service_site.first()
     service_site.updated = datetime.datetime.now()
@@ -526,7 +559,7 @@ def import_basic_services():
   service_data = {
     1: {
       'name': 'Website',
-      'fa_icon': 'globa',
+      'fa_icon': 'globe',
       'descr_short': 'Die Website.',
       'descr': '',
       'make_ssl_test': 1,
@@ -928,11 +961,67 @@ def regions_to_elastic():
       print "Deleting index %s" % single_index
       es.indices.delete(single_index)
   
-
-
 def import_osm():
   "http://overpass-api.de/api/interpreter?data=[out:json];(rel(62644);>;);out;"
   pass
+
+def generate_visualisations():
+  # Encryption Total
+  visualisation = Visualisation.query.filter_by(identifier='encryption_total')
+  if visualisation.count():
+    visualisation = visualisation.first()
+  else:
+    visualisation = Visualisation()
+    visualisation.created = datetime.datetime.now()
+  visualisation.updated = datetime.datetime.now()
+  hosts = Host.query.filter(Host.ssl_result >= 1).all()
+  result_raw = {
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0
+  }
+  for host in hosts:
+    result_raw[host.ssl_result] += 1
+  result_data = [
+    {
+      'value': result_raw[1],
+      'color': '#d9534f',
+      'label': u'Unverschlüsselt'
+    },
+    {
+      'value': result_raw[2],
+      'color': '#d9534f',
+      'label': u'Schwere Sicherheitslücken'
+    },
+    {
+      'value': result_raw[3],
+      'color': '#d9534f',
+      'label': u'Unsichere Verschlüsselung'
+    },
+    {
+      'value': result_raw[4],
+      'color': '#f0ad4e',
+      'label': u'Verbesserungswürdige Verschlüsselng'
+    },
+    {
+      'value': result_raw[5],
+      'color': '#5cb85c',
+      'label': u'Gute Verschlüsselung'
+    },
+    {
+      'value': result_raw[6],
+      'color': '#5cb85c',
+      'label': u'Ausgezeichnete Verschlüsselung'
+    }
+  ]
+  visualisation.data = json.dumps(result_data)
+  db.session.add(visualisation)
+  db.session.commit()
+
+
 
 # Creates a slug
 def slugify(text, delim=u'-'):

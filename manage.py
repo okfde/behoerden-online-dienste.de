@@ -37,10 +37,18 @@ def import_basic_services():
 @manager.command
 def host_ssl_check(host_id):
   util.update_host_check(host_id)
+  
+@manager.command
+def ssl_check(start_with):
+  util.ssl_check(start_with)
 
 @manager.command
 def es_import_regions():
   util.regions_to_elastic()
+
+@manager.command
+def generate_visualisations():
+  util.generate_visualisations()
 
 if __name__ == "__main__":
   manager.run()

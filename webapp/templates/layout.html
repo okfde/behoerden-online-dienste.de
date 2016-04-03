@@ -48,6 +48,24 @@
     <div class="collapse navbar-collapse" id="navbar">
       <ul class="nav navbar-nav navbar-right">
         <li><a href="/">Start</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Auswertung <span class="caret"></span></a>
+          <ul class="dropdown-menu navbar-inverse">    
+            <li><a href="/analysis/basics">Basis-Informationen</a></li>
+            <li><a href="/analysis/egovernment">eGovernment-Dienste</a></li>
+            <li><a href="/analysis/data">Daten-Dienste</a></li>
+            <li><a href="/analysis/encryption">Verschlüsselung</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Informationen <span class="caret"></span></a>
+          <ul class="dropdown-menu navbar-inverse">    
+            <li><a href="/info/services">Dienste-Übersicht</a></li>
+            <li><a href="/info/encryption">Verschlüsselung</a></li>
+            <li><a href="/info/data">Daten &amp; API</a></li>
+            <li><a href="/info/faq">FAQ</a></li>
+          </ul>
+        </li>
         <li><a href="/faq">FAQ</a></li>
         <li><a href="/impress">Impressum</a></li>
         <li><a href="/privacy">Datenschutz</a></li>
@@ -69,6 +87,7 @@
   </div>
 </footer>
 {{super()}}
+<script src="{{url_for('.static', filename='lib/chart-js/Chart.js')}}?v=1.0.2"></script>
 <script src="{{url_for('.static', filename='js/default.js')}}?v=0.0.1"></script>
 <!-- Piwik -->
 <script type="text/javascript">

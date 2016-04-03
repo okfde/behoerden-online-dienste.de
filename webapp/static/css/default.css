@@ -1,4 +1,13 @@
 
+.dropdown-menu.navbar-inverse > li > a {
+  color: #9d9d9d;
+}
+
+.dropdown-menu.navbar-inverse > li > a:focus, .dropdown-menu.navbar-inverse > li > a:hover {
+  background-color: #222;
+  color: #FFFFFF;
+}
+
 #region-host-form {
   display: none;
 }
@@ -6,6 +15,7 @@
 .navbar-brand sup {
   font-style: italic;
 }
+
 
 .row-fluid {
   clear: both;
@@ -111,19 +121,19 @@
   clear: both;
 }
 
-.col-rating-ssl-1 i, .col-rating-ssl-2 i {
+.col-rating-ssl-1 i, .col-rating-ssl-2 i, .col-rating-ssl-3 i {
   color: #A94442;
 }
 
-.col-rating-ssl-3 i {
+.col-rating-ssl-4 i {
   color: #8A6d3B;
 }
 
-.col-rating-ssl-4 i, .col-rating-ssl-5 i {
+.col-rating-ssl-5 i, .col-rating-ssl-6 i {
   color: #3C763D;
 }
 
-.col-rating-ssl-5 .fa-plus {
+.col-rating-ssl-6 .fa-plus, .col-rating-ssl-2 .fa-minus {
   font-size: 18px;
   vertical-align: text-top;
 }
@@ -150,4 +160,17 @@
   .clear-lg-0 {
     clear: both;
   }
+}
+
+/* SSL RESULT */
+#result-box h2 {
+  margin-top: 5px;
+}
+
+
+/* charts */
+
+
+.chart-square {
+  width: 100%;
 }

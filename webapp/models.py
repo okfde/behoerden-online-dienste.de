@@ -110,6 +110,7 @@ class SslTest(db.Model):
   
   rc4_available = db.Column(db.Integer())
   md5_available = db.Column(db.Integer())
+  anon_suite_available = db.Column(db.Integer())
   dhe_key = db.Column(db.Integer())
   ecdhe_key = db.Column(db.Integer())
   pfs_available = db.Column(db.Integer())
@@ -209,3 +210,15 @@ class ServiceGroup(db.Model):
   def __repr__(self):
     return '<ServiceGroup %r>' % self.name
 
+class Visualisation(db.Model):
+  __tablename__ = 'visualisation'
+  id = db.Column(db.Integer(), primary_key=True)
+  
+  created = db.Column(db.DateTime())
+  updated = db.Column(db.DateTime())
+  active = db.Column(db.Integer())
+  
+  name = db.Column(db.Text())
+  identifier = db.Column(db.String(128), unique=True)
+  descr = db.Column(db.Text())
+  data = db.Column(db.Text())

@@ -1,4 +1,22 @@
 $(document).ready(function() {
+  $('.chart-square').each(function(index) {
+    $(this).attr({
+      'width': $(this).width(),
+      'height': $(this).width()
+    });
+  });
+  $( window ).resize(function() {
+    $('.chart-square').each(function(index) {
+      $(this).attr({
+        'width': $(this).width(),
+        'height': $(this).width()
+      });
+    });
+  });
+  Chart.defaults.global.tooltipFontSize = 20;
+  Chart.defaults.global.responsive = true;
+  
+  
   $('#region-host-button a').click(function(event) {
     event.preventDefault();
     $('#region-host-form').css({'display': 'block'});

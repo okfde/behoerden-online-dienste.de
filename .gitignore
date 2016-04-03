@@ -11,4 +11,4 @@ config.py
 venv
 migrations
 import/*
-
+log/*
