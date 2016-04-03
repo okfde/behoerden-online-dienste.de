@@ -3,10 +3,78 @@
 {% block content %}
 <div class="jumbotron">
   <div class="container">
-    <h1>Fragen &amp; Antworten</h1>
+    <h1>Informationen: Verschlüsselung</h1>
   </div>
 </div>
 <div class="container">
+  <div class="row-fluid">
+    <div class="col-md-12">
+      <h2 id="why-ssl">Die verwendeten Kategorien</h2>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="col-sm-2 col-rating col-rating-ssl-1">
+      <i class="fa fa-unlock"></i>
+    </div>
+    <div>
+      <h3>Keine Verschlüsselung</h3>
+      <p>Der Host bietet keine Verschlüsselung an.</p>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="col-sm-2 col-rating col-rating-ssl-2">
+      <i class="fa fa-lock"></i><i class="fa fa-minus"></i>
+    </div>
+    <div>
+      <h3>Extrem unsichere Verschlüsselung</h3>
+      <p>Der Host unterstützt entweder SSLv2 oder hat die Heartbleed-Sicherheitslücke noch nicht geschlossen. Beides ist absolut fatal, da es zu einem Verlust des Private Keys führen kann.</p>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="col-sm-2 col-rating col-rating-ssl-3">
+      <i class="fa fa-lock"></i>
+    </div>
+    <div>
+      <h3>Unsichere Verschlüsselung</h3>
+      <p>Der Host verwendet eine deutlich veraltete Verschlüsselungsmechanismen, so dass es recht leicht ist, diese zu knacken.</p>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="col-sm-2 col-rating col-rating-ssl-4">
+      <i class="fa fa-lock"></i>
+    </div>
+    <div>
+      <h3>Verbesserungswürdige Verschlüsselung</h3>
+      <p>Der Host verwendet veraltete Verschlüsselungsmechanismen, welche schwerer auszunutzende Sicherheitslücken aufweisen.</p>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="col-sm-2 col-rating col-rating-ssl-5">
+      <i class="fa fa-lock"></i>
+    </div>
+    <div>
+      <h3>Gute Verschlüsselung</h3>
+      <p>Der Host verwendet eine gute und damit zeitgemäße Verschlüsselungskonfiguration.</p>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="col-sm-2 col-rating col-rating-ssl-6">
+      <i class="fa fa-lock"></i><i class="fa fa-plus"></i>
+    </div>
+    <div>
+      <h3>Ausgezeichnete Verschlüsselung</h3>
+      <p>Der Host verwendet eine ausgezeichnete und damit zukunftsfähige Verschlüsselungskonfiguration.</p>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="col-sm-2 col-rating col-rating-ssl-0">
+      <i class="fa fa-question-circle"></i>
+    </div>
+    <div>
+      <h3>Host noch nicht gescannt</h3>
+      <p>Der Host wurde noch nicht gescannt. Dies passiert üblicherweise bei neu hinzugefügten Hosts.</p>
+    </div>
+  </div>
   <div class="row-fluid">
     <div class="col-md-12">
       <h2 id="why-ssl">Wofür braucht eine Seite SSL?</h2>
@@ -38,7 +106,7 @@
       <p>Wenn man das erste Mal mit SSL zu tun hat, sind die verschiedenen Dateien oft irritierend. Deswegen hier eine Funktion der Dateien.</p>
       <ul>
         <li>Der <strong>Private Key</strong>, meist mit der Dateiendung .key, ist der Kern der Verschlüsselung. Wenn irgendwer unerlaubt den Key bekommt, kann er damit die Verschlüsselung brechen.</li>
-        <li>Mit dem <strong>Zertifikat</strong>, meist mit der Dateiendung .crt oder .pem, sagt der SSL-Zertifikatgeber, dass Ihr Key ok ist, d.h. dass das Ihr Private Key und nicht ein fremder Private Key ist.</li>
+        <li>Mit dem <strong>Zertifikat</strong>, meist mit der Dateiendung .crt oder .pem, sagt der SSL-Zertifikatgeber, dass der eingesetzte Key ok ist.</li>
         <li>Das <strong>Certificate Signing Request, kurz CSR</strong>, meist auch mit der Dateiendung .csr, ist die Anfrage an den SSL-Zertifikatgeber, aus dem dann das Zertifikat generiert wird. Das CSR wird nach der Erstellung des Zertifikates nicht mehr gebraucht.</li>
         <li>Das <strong>Root-Zertifikat</strong> ist die Identität des SSL-Zertifikatgebers. Diese Zertifikate sind in Ihrem Browser enthalten.</li>
         <li>Oft gibt es noch <strong>Zwischenzertifikate</strong>, so dass <strong>Zertifikatketten</strong> gebildet werden. Diese haben meist auch die Endung .crt und beinhalten alle Zertifikate von unten nach oben, d.h. oben steht das Zertifikat für die eigene Seite, anschließend das / die Zwischenzertifikat(e) bis hoch zum Root-Zertifikat. Das Root-Zertifikat muss in der Kette nicht enthalten sein.</li>
@@ -53,8 +121,8 @@
   </div>
   <div class="row-fluid">
     <div class="col-md-12">
-      <h2 id="sha1">Warum sollte ich ein SHA2- (und kein SHA1-) Zertifikat nutzen?</h2>
-      <p>SHA1 steht schon länger im Verdacht, nicht sicher zu sein. Schrittweise <a href="http://www.heise.de/security/meldung/Todesstoss-fuer-SHA-1-steht-bevor-2849484.html">werden praktikable Angriffe darauf entwickelt</a>. Dies hat die Browserhersteller dazu bewogen, bei einem SHA1-Zertifikat je nach Ablaufdatum des Zertifikates ein gelbes oder sogar ein rotes Schloß mehr in der Browserzeile anzuzeigen. SHA1-Zertifikate müssen nicht nur beim eigenen Zertifikat verhindert werden, sondern auch bei allen Zwischenzertifikaten.</p>
+      <h2 id="sha1">Warum sollte ein SHA2- (und kein SHA1-) Zertifikat genutzt werden?</h2>
+      <p>SHA1 steht schon länger im Verdacht, nicht sicher zu sein. Schrittweise <a href="http://www.heise.de/security/meldung/Todesstoss-fuer-SHA-1-steht-bevor-2849484.html">werden praktikable Angriffe darauf entwickelt</a>. Dies hat die Browserhersteller dazu bewogen, bei einem SHA1-Zertifikat je nach Ablaufdatum des Zertifikates ein gelbes oder sogar ein rotes Schloß mehr in der Browserzeile anzuzeigen. SHA1-Zertifikate müssen nicht nur beim Seiten-Zertifikat verhindert werden, sondern auch bei allen Zwischenzertifikaten.</p>
     </div>
   </div>
   <div class="row-fluid">
@@ -65,19 +133,25 @@
   </div>
   <div class="row-fluid">
     <div class="col-md-12">
-      <h2 id="strong-dh">Warum sollte ich einen starken DH-Key verwenden?</h2>
+      <h2 id="strong-dh">Warum sollte ein starker DH-Key eingesetzt werden?</h2>
       <p>...</p>
     </div>
   </div>
   <div class="row-fluid">
     <div class="col-md-12">
-      <h2 id="rc4">Warum sollte ich RC4 nicht mehr nutzen?</h2>
+      <h2 id="rc4">Warum sollte RC4 nicht mehr genutzt werden?</h2>
       <p>...</p>
     </div>
   </div>
   <div class="row-fluid">
     <div class="col-md-12">
-      <h2 id="hsts">Was ist HSTS und wann sollte ich es nutzen?</h2>
+      <h2 id="hsts">Was ist HSTS und wann sollte es eingesetzt werden?</h2>
+      <p>...</p>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="col-md-12">
+      <h2 id="hsts">Was ist TLS_FALLBACK_SCSV und warum sollte es eingesetzt werden?</h2>
       <p>...</p>
     </div>
   </div>

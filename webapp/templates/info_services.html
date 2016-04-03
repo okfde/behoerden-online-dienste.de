@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="jumbotron">
+  <div class="container">
+    <h1>Informationen: Dienste</h1>
+  </div>
+</div>
+<div class="container">
+  <div class="row-fluid">
+    <div class="col-md-12">
+      <h2>Basis-Informationen</h2>
+    </div>
+  </div>
+{% for service in services[1] %}
+  <div class="row-fluid">
+    <div class="col-md-2 col-rating">
+      <i class="fa fa-{{ service.fa_icon }}"></i>
+    </div>
+    <div class="col-md-10">
+      <h4>{{ service.name }}</h4>
+      <p>{{ service.descr }}</p>
+    </div>
+  </div>
+{% endfor %}
+  <div class="row-fluid">
+    <div class="col-md-12">
+      <h2>eGovernment-Dienste</h2>
+    </div>
+  </div>
+{% for service in services[2] %}
+  <div class="row-fluid">
+    <div class="col-md-2 col-rating">
+      <i class="fa fa-{{ service.fa_icon }}"></i>
+    </div>
+    <div class="col-md-10">
+      <h4>{{ service.name }}</h4>
+      <p>{{ service.descr }}</p>
+    </div>
+  </div>
+{% endfor %}
+  <div class="row-fluid">
+    <div class="col-md-12">
+      <h2>Daten-Dienste</h2>
+    </div>
+  </div>
+{% for service in services[3] %}
+  <div class="row-fluid">
+    <div class="col-md-2 col-rating">
+      <i class="fa fa-{{ service.fa_icon }}"></i>
+    </div>
+    <div class="col-md-10">
+      <h4>{{ service.name }}</h4>
+      <p>{{ service.descr }}</p>
+    </div>
+  </div>
+{% endfor %}
+</div>
+{% endblock %}

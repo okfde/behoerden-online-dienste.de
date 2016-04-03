@@ -973,6 +973,8 @@ def generate_visualisations():
   else:
     visualisation = Visualisation()
     visualisation.created = datetime.datetime.now()
+    visualisation.active = 1
+    visualusation.identifier = 'encryption_total'
   visualisation.updated = datetime.datetime.now()
   hosts = Host.query.filter(Host.ssl_result >= 1).all()
   result_raw = {
