@@ -23,8 +23,9 @@ im Zusammenhang mit der Software oder sonstiger Verwendung der Software
 entstanden.
 """
 
-import datetime, calendar, email.utils, re, urllib, urllib2, json, math, subprocess, socket, sys, unicodecsv, translitcodec
+import datetime, calendar, email.utils, re, urllib, urllib2, json, math, subprocess, socket, sys, unicodecsv, translitcodec, requests, urllib3
 from lxml import etree
+from sqlalchemy import or_, desc, asc
 from models import *
 from webapp import app, db, es
 
@@ -269,11 +270,23 @@ def ssl_check(start_with=None):
     hosts = hosts.filter(Host.id >= start_with)
   hosts = hosts.order_by(Host.id).all()
   for host in hosts:
-    print "check ID %s: %s" % (host.id, host.host)
-    update_host_check(host.id)
+    print "Check ID %s: %s" % (host.id, host.host)
+    ssl_check_single(host.id)
 
-def update_host_check(host_id):
+
+def ssl_check_calidate():
+  hosts = Host.query.filter_by(active=1).filter_by(ssl_result=1).all()
+  for host in hosts:
+    ssl_test = SslTest.query.filter_by(host_id=host.id).order_by(desc(SslTest.created)).first()
+    if not ssl_test.port_443_available:
+      if check_port_443_available(host.host):
+        print "Updating %s" % host.host
+        ssl_check_single(host.id)
+    
+
+def ssl_check_single(host_id):
   host = Host.query.filter_by(id=host_id).first()
+  requests.packages.urllib3.disable_warnings()
 
   # Check URL
   result = {}
@@ -284,9 +297,6 @@ def update_host_check(host_id):
   test_result.host_id = host_id
   test_result.host = host.host
   test_result.ip = host.ip
-  
-  # 1 = nicht existent, 2 = rotminus, 3 = rot, 4 = gelb, 5 = grün, 6 = grünplus
-  summary = 1
   
   # if yes: check ssl avaiable
   if result['port_443_available']:
@@ -299,72 +309,41 @@ def update_host_check(host_id):
         if 'cert_matches' in result:
           test_result.cert_matches = result['cert_matches']
           if test_result.cert_matches:
-            summary = 6
             if 'rc4_available' in result:
               test_result.rc4_available = result['rc4_available']
-              if test_result.rc4_available and summary > 4:
-                summary = 4
             if 'md5_available' in result:
               test_result.md5_available = result['md5_available']
-              if test_result.md5_available and summary > 4:
-                summary = 4
             if 'anon_suite_available' in result:
               test_result.anon_suite_available = result['anon_suite_available']
-              if test_result.anon_suite_available and summary > 3:
-                summary = 3
             if 'dhe_key' in result:
               test_result.dhe_key = result['dhe_key']
-              if test_result.dhe_key < 2048 and summary > 4:
-                summary = 4
-              if test_result.dhe_key < 1024 and summary > 3:
-                summary = 3
             if 'ecdhe_key' in result:
               test_result.ecdhe_key = result['ecdhe_key']
-              if test_result.ecdhe_key < 256 and summary > 4:
-                summary = 4
             if 'fallback_scsv_available' in result:
               test_result.fallback_scsv_available = result['fallback_scsv_available']
-              if not test_result.fallback_scsv_available and summary > 5:
-                summary = 5
             if 'protocol_num' in result:
               test_result.protocol_num = result['protocol_num']
             if 'protocol_best' in result:
               test_result.protocol_best = result['protocol_best']
-              if (test_result.protocol_best == 'tlsv1_1' or test_result.protocol_best == 'tlsv1') and summary > 4:
-                summary = 4
             if 'hsts_available' in result:
               test_result.hsts_available = result['hsts_available']
-              if not test_result.hsts_available and summary > 5:
-                summary = 5
             if 'session_renegotiation_secure' in result:
               test_result.session_renegotiation_secure = result['session_renegotiation_secure']
-              if not test_result.session_renegotiation_secure and summary > 3:
-                summary = 3
             if 'session_renegotiation_client' in result:
               test_result.session_renegotiation_client = result['session_renegotiation_client']
             if 'heartbleed' in result:
               test_result.heartbleed = result['heartbleed']
-              if test_result.heartbleed and summary > 2:
-                summary = 2
             if 'sha1_cert' in result:
               test_result.sha1_cert = result['sha1_cert']
-              if test_result.sha1_cert and summary > 4:
-                summary = 4
             if 'ocsp_stapling' in result:
               test_result.ocsp_stapling = result['ocsp_stapling']
             if 'pfs_available' in result:
               test_result.pfs_available = result['pfs_available']
-              if not test_result.pfs_available and summary > 4:
-                summary = 4
             
             if 'sslv2_available' in result:
               test_result.sslv2_available = result['sslv2_available']
-              if test_result.sslv2_available and summary > 2:
-                summary = 2
             if 'sslv3_available' in result:
               test_result.sslv3_available = result['sslv3_available']
-              if test_result.sslv3_available and summary > 3:
-                summary = 3
             if 'tlsv1_available' in result:
               test_result.tlsv1_available = result['tlsv1_available']
             if 'tlsv1_1_available' in result:
@@ -389,30 +368,92 @@ def update_host_check(host_id):
               test_result.sslv3_cipher_suites_preferred = ', '.join(result['sslv3_cipher_suites_preferred'])
             if 'tlsv1_cipher_suites_preferred' in result:
               test_result.tlsv1_cipher_suites_preferred = ', '.join(result['tlsv1_cipher_suites_preferred'])
-              if ('RC4' in test_result.tlsv1_cipher_suites_preferred or (not len(test_result.tlsv1_cipher_suites_preferred) and 'RC4' in test_result.tlsv1_cipher_suites_accepted)) and summary > 3:
-                summary = 3
-              if ('MD5' in test_result.tlsv1_cipher_suites_preferred or (not len(test_result.tlsv1_cipher_suites_preferred) and 'MD5' in test_result.tlsv1_cipher_suites_accepted)) and summary > 3:
-                summary = 3
             if 'tlsv1_1_cipher_suites_preferred' in result:
               test_result.tlsv1_1_cipher_suites_preferred = ', '.join(result['tlsv1_1_cipher_suites_preferred'])
-              if ('RC4' in test_result.tlsv1_1_cipher_suites_preferred or (not len(test_result.tlsv1_1_cipher_suites_preferred) and 'RC4' in test_result.tlsv1_1_cipher_suites_accepted)) and summary > 3:
-                summary = 3
-              if ('MD5' in test_result.tlsv1_1_cipher_suites_preferred or (not len(test_result.tlsv1_1_cipher_suites_preferred) and 'MD5' in test_result.tlsv1_1_cipher_suites_accepted)) and summary > 3:
-                summary = 3
             if 'tlsv1_2_cipher_suites_preferred' in result:
               test_result.tlsv1_2_cipher_suites_preferred = ', '.join(result['tlsv1_2_cipher_suites_preferred'])
-              if ('RC4' in test_result.tlsv1_2_cipher_suites_preferred or (not len(test_result.tlsv1_2_cipher_suites_preferred) and 'RC4' in test_result.tlsv1_2_cipher_suites_accepted)) and summary > 3:
-                summary = r
-              if ('MD5' in test_result.tlsv1_2_cipher_suites_preferred or (not len(test_result.tlsv1_2_cipher_suites_preferred) and 'MD5' in test_result.tlsv1_2_cipher_suites_accepted)) and summary > 3:
-                summary = 3
+            
+            # make request to check if there is an forward
+            request = requests.get('http://%s' % host.host, verify=False)
+            if request.url[0:8] == 'https://':
+              test_result.ssl_forward = 1
+            else:
+              test_result.ssl_forward = 0
+  db.session.add(test_result)
+  db.session.commit()
+  ssl_check_summary_single(host.id)
+  return result
+
+
+def ssl_check_summary():
+  hosts = Host.query.filter(Host.ssl_result > 1).filter_by(active=1).all()
+  for host in hosts:
+    ssl_check_summary_single(host.id)
+  
+
+def ssl_check_summary_single(host_id):
+  host = Host.query.filter_by(id=host_id).first()
+  ssl_test = SslTest.query.filter_by(host_id=host.id).order_by(desc(SslTest.created)).first()
+
+  # 1 = nicht existent, 2 = rotminus, 3 = rot, 4 = gelb, 5 = grün, 6 = grünplus
+  summary = 1
+  if ssl_test.port_443_available and ssl_test.ssl_ok and ssl_test.cert_matches:
+    summary = 6
+    # bad ciphers
+    if ssl_test.anon_suite_available and summary > 3:
+      summary = 3
+    if (ssl_test.protocol_best == 'tlsv1_1' or ssl_test.protocol_best == 'tlsv1') and summary > 4:
+      summary = 4
+    if ssl_test.sslv2_available and summary > 2:
+      summary = 2
+    if ssl_test.sslv3_available and ssl_test.fallback_scsv_available and summary > 4:
+      summary = 4
+    if ssl_test.sslv3_available and not ssl_test.fallback_scsv_available and summary > 3:
+      summary = 3
+    if ssl_test.rc4_available and summary > 4:
+      summary = 4
+    if ssl_test.md5_available and summary > 4:
+      summary = 4
+      
+    # bad cipher, part 2
+    for version in ['1', '1_1', '1_2']:
+      if getattr(ssl_test, 'tlsv%s_cipher_suites_accepted' % version):
+        if getattr(ssl_test, 'tlsv%s_cipher_suites_preferred' % version):
+          if 'RC4' in getattr(ssl_test, 'tlsv%s_cipher_suites_preferred' % version) and summary > 3:
+            summary = 3
+          if (not len(getattr(ssl_test, 'tlsv%s_cipher_suites_preferred' % version)) and 'RC4' in getattr(ssl_test, 'tlsv%s_cipher_suites_accepted' % version)) and summary > 3:
+            summary = 3
+        else:
+          if 'RC4' in getattr(ssl_test, 'tlsv%s_cipher_suites_accepted' % version) and summary > 3:
+            summary = 3
+    
+    # bad pfs
+    if not ssl_test.pfs_available and summary > 4:
+      summary = 4
+    if ssl_test.dhe_key:
+      if ssl_test.dhe_key < 2048 and summary > 4:
+        summary = 4
+      if ssl_test.dhe_key < 1024 and summary > 3:
+        summary = 3
+    if ssl_test.ecdhe_key:
+      if ssl_test.ecdhe_key < 256 and summary > 4:
+        summary = 4
+    
+    #misc
+    if not ssl_test.fallback_scsv_available and summary > 5:
+      summary = 5
+    if not ssl_test.session_renegotiation_secure and summary > 3:
+      summary = 3
+    if ssl_test.heartbleed and summary > 2:
+      summary = 2
+    if ssl_test.sha1_cert and summary > 4:
+      summary = 4
 
   host.ssl_result = summary
-  
-  db.session.add(test_result)
   db.session.add(host)
   db.session.commit()
-  return result
-  
+
+
 def import_regions():
   print "Importing %s" % app.config['REGION_CSV']
   with open(app.config['REGION_CSV'], 'rb') as region_file:
@@ -1022,8 +1063,6 @@ def generate_visualisations():
   visualisation.data = json.dumps(result_data)
   db.session.add(visualisation)
   db.session.commit()
-
-
 
 # Creates a slug
 def slugify(text, delim=u'-'):
