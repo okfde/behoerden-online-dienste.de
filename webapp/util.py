@@ -376,12 +376,12 @@ def ssl_check_single(host_id):
             # make request to check if there is an forward
             try:
               request = requests.get('http://%s' % host.host, verify=False)
+              if request.url[0:8] == 'https://':
+                test_result.ssl_forward = 1
+              else:
+                test_result.ssl_forward = 0
             except requests.exceptions.SSLError:
               print "CRITICAL SSL ERROR"
-            if request.url[0:8] == 'https://':
-              test_result.ssl_forward = 1
-            else:
-              test_result.ssl_forward = 0
   db.session.add(test_result)
   db.session.commit()
   ssl_check_summary_single(host.id)
