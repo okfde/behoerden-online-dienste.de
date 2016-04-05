@@ -13,9 +13,8 @@ $(document).ready(function() {
       });
     });
   });
-  Chart.defaults.global.tooltipFontSize = 20;
+  Chart.defaults.global.tooltipFontSize = 10;
   Chart.defaults.global.responsive = true;
-  
   
   $('#region-host-button a').click(function(event) {
     event.preventDefault();

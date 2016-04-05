@@ -145,7 +145,7 @@ def analysis_data():
 
 @app.route("/analysis/encryption")
 def analysis_encryption():
-  visualisations_raw = Visualisation.query.filter_by(identifier='encryption_total').all()
+  visualisations_raw = Visualisation.query.all()
   visualisations = {}
   for visualisation_raw in visualisations_raw:
     visualisations[visualisation_raw.identifier] = visualisation_raw

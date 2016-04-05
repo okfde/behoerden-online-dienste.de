@@ -9,12 +9,33 @@
 <div class="container">
   <div class="row-fluid">
     <div class="col-md-12">
-      <h2 id="why-ssl">Datenquellen</h2>
+      <h2>Datenquellen</h2>
     </div>
   </div>
   <div class="row-fluid">
     <div class="col-md-12">
-      <h2 id="why-ssl">Schnittstelle (JSON-API)</h2>
+      <h3>Bundesamt für Statistik</h3>
+      <p>Das Bundesamt für Statistik veröffentlicht mit der GV100 alle drei Monate eine Übersicht über alle politischen Ebenen in Deutschland inklusive ihrer Regionalschlüssel, welcher sich hervorragend als ID eignet, um Daten aus anderen Quellen zuzuordnen. Mit enthalten sind außerdem einige Metadaten wie z.B. Daten zur Bevökerung.</p>
+      <p>Sämtliche Namen und die Zuordnung zu den Regionalschlüsseln auf dieser Seite stammen von der GV100. Diese kann man sich <a href="https://www.destatis.de/DE/ZahlenFakten/LaenderRegionen/Regionales/Gemeindeverzeichnis/Administrativ/AdministrativeUebersicht.html">auf den Seiten des Bundesamtes für Statistik downloaden</a>.</p>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="col-md-12">
+      <h3>WikiData</h3>
+      <p>WikiData ist eine Initiative innerhalb der Wikipedia, welche aus den einzelnen Feldern der Wikipedia-Artikel strukturierte Daten macht. Diese können dann über den WikiData Query Service mit SPARQL Queries abgerufen werden.</p>
+      <p>Sämtliche URLs zu den Websites stammen von WikiData und unterliegen so der <a href="https://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0</a>. Die Daten können mit dem <a href="https://query.wikidata.org/#%23%20List%20of%20german%20municipalities%20with%20their%20rgs%20and%20websites%0ASELECT%20%3Fq%20%3Frgs%20%3Fname%20%3Fwebsite%20%0AWHERE%20%0A%7B%0A%09%3Fq%20wdt%3AP31%20wd%3AQ262166%20.%0A%09%3Fq%20wdt%3AP856%20%3Fwebsite%20.%0A%20%20%20%20%3Fq%20wdt%3AP1388%20%3Frgs%20.%0A%09OPTIONAL%20%7B%20%20%0A%09%09%3Fq%20rdfs%3Alabel%20%3Fname%20filter%20(lang(%3Fname)%20%3D%20%22de%22)%20.%0A%09%7D%0A%7D">Query für RGS</a> sowie dem <a href="https://query.wikidata.org/#%23%20List%20of%20german%20municipalities%20with%20their%20rgs%20and%20websites%0ASELECT%20%3Fq%20%3Fags%20%3Fname%20%3Fwebsite%20%0AWHERE%20%0A%7B%0A%09%3Fq%20wdt%3AP31%20wd%3AQ262166%20.%0A%09%3Fq%20wdt%3AP856%20%3Fwebsite%20.%0A%20%20%20%20%3Fq%20wdt%3AP439%20%3Fags%20.%0A%09OPTIONAL%20%7B%20%20%0A%09%09%3Fq%20rdfs%3Alabel%20%3Fname%20filter%20(lang(%3Fname)%20%3D%20%22de%22)%20.%0A%09%7D%0A%7D">Query für die AGS</a> abgerufen werden.</p>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="col-md-12">
+      <h3>Online-Check der Grünen NRW</h3>
+      <p>Die Landtagsfraktion von Bündnis 90 / Die Grünen haben im Jahr 2014 und im Jahr 2016 einen Online-Check durchgeführt, bei dem eGovernment-, Daten- und andere Angebote von Kommunen bewertet wurden. Ein Teil der Kommunen wurde von der Open Knowledge Foundation professionell erstellt.</p>
+      <p>Sämtliche URLs zu weiteren Diensten abseits der Website stammen aus dieser Quelle.</p>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="col-md-12">
+      <h2">Schnittstelle (JSON-API)</h2>
     </div>
   </div>
 </div>

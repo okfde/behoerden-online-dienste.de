@@ -13,3 +13,4 @@ Flask-Elasticsearch
 dnspython
 unicodecsv
 lxml
+requests

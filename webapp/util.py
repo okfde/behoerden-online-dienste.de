@@ -374,7 +374,10 @@ def ssl_check_single(host_id):
               test_result.tlsv1_2_cipher_suites_preferred = ', '.join(result['tlsv1_2_cipher_suites_preferred'])
             
             # make request to check if there is an forward
-            request = requests.get('http://%s' % host.host, verify=False)
+            try:
+              request = requests.get('http://%s' % host.host, verify=False)
+            except requests.exceptions.SSLError:
+              print "CRITICAL SSL ERROR"
             if request.url[0:8] == 'https://':
               test_result.ssl_forward = 1
             else:
@@ -452,6 +455,12 @@ def ssl_check_summary_single(host_id):
   host.ssl_result = summary
   db.session.add(host)
   db.session.commit()
+
+
+def hoster_check():
+  #do it with http://secynic.github.io/ipwhois/README.html
+  pass
+
 
 
 def import_regions():
@@ -1007,27 +1016,60 @@ def import_osm():
   pass
 
 def generate_visualisations():
-  # Encryption Total
-  visualisation = Visualisation.query.filter_by(identifier='encryption_total')
+  ##############################
+  ### Ratsinformationssystem ###
+  ##############################
+  visualisation = Visualisation.query.filter_by(identifier='ris_available')
   if visualisation.count():
     visualisation = visualisation.first()
   else:
     visualisation = Visualisation()
     visualisation.created = datetime.datetime.now()
     visualisation.active = 1
-    visualusation.identifier = 'encryption_total'
+    visualisation.identifier = 'ris_available'
+  visualisation.updated = datetime.datetime.now()
+  service_sites = ServiceSite.query.filter_by(active=1).filter_by(service_id=2).filter(ServiceSite.quality_show!=None).filter_by().all()
+  result_raw = {
+    1: 0,
+    2: 0
+  }
+  for service_site in service_sites:
+    result_raw[2 if service_site.quality_show else 1] += 1
+  result_data = [
+    {
+      'value': result_raw[1],
+      'color': '#d9534f',
+      'label': u'Kein Ratsinformationssystem'
+    },
+    {
+      'value': result_raw[2],
+      'color': '#5cb85c',
+      'label': u'Ratsinformationssystem Online'
+    }
+  ]
+  visualisation.data = json.dumps(result_data)
+  db.session.add(visualisation)
+  db.session.commit()
+  
+  ########################
+  ### Encryption Total ###
+  ########################
+  visualisation = Visualisation.query.filter_by(identifier='encryption_yes_no')
+  if visualisation.count():
+    visualisation = visualisation.first()
+  else:
+    visualisation = Visualisation()
+    visualisation.created = datetime.datetime.now()
+    visualisation.active = 1
+    visualisation.identifier = 'encryption_yes_no'
   visualisation.updated = datetime.datetime.now()
   hosts = Host.query.filter(Host.ssl_result >= 1).all()
   result_raw = {
     1: 0,
-    2: 0,
-    3: 0,
-    4: 0,
-    5: 0,
-    6: 0
+    2: 0
   }
   for host in hosts:
-    result_raw[host.ssl_result] += 1
+    result_raw[2 if host.ssl_result > 1 else 1] += 1
   result_data = [
     {
       'value': result_raw[1],
@@ -1036,26 +1078,59 @@ def generate_visualisations():
     },
     {
       'value': result_raw[2],
+      'color': '#5cb85c',
+      'label': u'Verschlüsselt'
+    }
+  ]
+  visualisation.data = json.dumps(result_data)
+  db.session.add(visualisation)
+  db.session.commit()
+
+  ##########################
+  ### Encryption Quality ###
+  ##########################
+  visualisation = Visualisation.query.filter_by(identifier='encryption_quality')
+  if visualisation.count():
+    visualisation = visualisation.first()
+  else:
+    visualisation = Visualisation()
+    visualisation.created = datetime.datetime.now()
+    visualisation.active = 1
+    visualisation.identifier = 'encryption_quality'
+  visualisation.updated = datetime.datetime.now()
+  hosts = Host.query.filter(Host.ssl_result >= 2).all()
+  result_raw = {
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0
+  }
+  for host in hosts:
+    result_raw[host.ssl_result - 1] += 1
+  result_data = [
+    {
+      'value': result_raw[1],
       'color': '#d9534f',
       'label': u'Schwere Sicherheitslücken'
     },
     {
-      'value': result_raw[3],
+      'value': result_raw[2],
       'color': '#d9534f',
       'label': u'Unsichere Verschlüsselung'
     },
     {
-      'value': result_raw[4],
+      'value': result_raw[3],
       'color': '#f0ad4e',
       'label': u'Verbesserungswürdige Verschlüsselng'
     },
     {
-      'value': result_raw[5],
+      'value': result_raw[4],
       'color': '#5cb85c',
       'label': u'Gute Verschlüsselung'
     },
     {
-      'value': result_raw[6],
+      'value': result_raw[5],
       'color': '#5cb85c',
       'label': u'Ausgezeichnete Verschlüsselung'
     }
@@ -1063,7 +1138,8 @@ def generate_visualisations():
   visualisation.data = json.dumps(result_data)
   db.session.add(visualisation)
   db.session.commit()
-
+  
+  
 # Creates a slug
 def slugify(text, delim=u'-'):
   """Generates an ASCII-only slug."""

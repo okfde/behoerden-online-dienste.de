@@ -8,16 +8,21 @@
 </div>
 <div class="container">
   <div class="row-fluid">
-    <div class="col-md-12">
-      <h2>Gesamtauswertung</h2>
+    <div class="col-md-2 col-xs-12">
+      <canvas id="encryption_yes_no" class="chart-square"></canvas>
+    </div>
+    <div class="col-md-10 col-xs-12">
+      <h2>Anzahl der verschlüsselten Seiten</h2>
+      <p>Die meisten Seiten bieten gar keine Verschlüsselung an.</p>
     </div>
   </div>
   <div class="row-fluid">
-    <div class="col-md-6 col-xs-12">
-      Dies ist ein Desaster.
+    <div class="col-md-2 col-xs-12">
+      <canvas id="encryption_quality" class="chart-square"></canvas>
     </div>
-    <div class="col-md-6 col-xs-12">
-      <canvas id="encryption_total" class="chart-square"></canvas>
+    <div class="col-md-10 col-xs-12">
+      <h2>Qualität der Verschlüsselung</h2>
+      <p>Die Qualität ist sehr durchwachsen.</p>
     </div>
   </div>
 </div>
@@ -27,7 +32,8 @@
 {{super()}}
 <script>
   $(document).ready(function() {
-    new Chart(document.getElementById("encryption_total").getContext("2d")).Doughnut({{ visualisations['encryption_total']['data']|safe }}, {});
+    new Chart(document.getElementById("encryption_yes_no").getContext("2d")).Doughnut({{ visualisations['encryption_yes_no']['data']|safe }}, { });
+    new Chart(document.getElementById("encryption_quality").getContext("2d")).Doughnut({{ visualisations['encryption_quality']['data']|safe }}, {});
   });
 </script>
 {% endblock %}
