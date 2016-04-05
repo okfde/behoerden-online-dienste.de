@@ -1035,18 +1035,24 @@ def generate_visualisations():
   }
   for service_site in service_sites:
     result_raw[2 if service_site.quality_show else 1] += 1
-  result_data = [
-    {
-      'value': result_raw[1],
-      'color': '#d9534f',
-      'label': u'Kein Ratsinformationssystem'
-    },
-    {
-      'value': result_raw[2],
-      'color': '#5cb85c',
-      'label': u'Ratsinformationssystem Online'
-    }
-  ]
+  result_data = {
+    'labels': [
+      u'Kein Ratsinformationssystem',
+      u'Ratsinformationssystem Online'
+    ],
+    'datasets': [
+      {
+        'data': [
+          result_raw[1],
+          result_raw[2]
+        ],
+        'backgroundColor': [
+          '#d9534f',
+          '#5cb85c'
+        ]
+      }
+    ]
+  }
   visualisation.data = json.dumps(result_data)
   db.session.add(visualisation)
   db.session.commit()
@@ -1070,18 +1076,24 @@ def generate_visualisations():
   }
   for host in hosts:
     result_raw[2 if host.ssl_result > 1 else 1] += 1
-  result_data = [
-    {
-      'value': result_raw[1],
-      'color': '#d9534f',
-      'label': u'Unverschlüsselt'
-    },
-    {
-      'value': result_raw[2],
-      'color': '#5cb85c',
-      'label': u'Verschlüsselt'
-    }
-  ]
+  result_data = {
+    'labels': [
+      u'Unverschlüsselt',
+      u'Verschlüsselt'
+    ],
+    'datasets': [
+      {
+        'data': [
+          result_raw[1],
+          result_raw[2]
+        ],
+        'backgroundColor': [
+          '#d9534f',
+          '#5cb85c'
+        ]
+      }
+    ]
+  }
   visualisation.data = json.dumps(result_data)
   db.session.add(visualisation)
   db.session.commit()
@@ -1108,33 +1120,33 @@ def generate_visualisations():
   }
   for host in hosts:
     result_raw[host.ssl_result - 1] += 1
-  result_data = [
-    {
-      'value': result_raw[1],
-      'color': '#d9534f',
-      'label': u'Schwere Sicherheitslücken'
-    },
-    {
-      'value': result_raw[2],
-      'color': '#d9534f',
-      'label': u'Unsichere Verschlüsselung'
-    },
-    {
-      'value': result_raw[3],
-      'color': '#f0ad4e',
-      'label': u'Verbesserungswürdige Verschlüsselng'
-    },
-    {
-      'value': result_raw[4],
-      'color': '#5cb85c',
-      'label': u'Gute Verschlüsselung'
-    },
-    {
-      'value': result_raw[5],
-      'color': '#5cb85c',
-      'label': u'Ausgezeichnete Verschlüsselung'
-    }
-  ]
+  result_data = {
+    'labels': [
+      u'sehr unsicher',
+      u'unsicher',
+      u'Verbesserungswürdig',
+      u'gute',
+      u'ausgezeichnet'
+    ],
+    'datasets': [
+      {
+        'data': [
+          result_raw[1],
+          result_raw[2],
+          result_raw[3],
+          result_raw[4],
+          result_raw[5]
+        ],
+        'backgroundColor': [
+          '#d9534f',
+          '#d9534f',
+          '#f0ad4e',
+          '#5cb85c',
+          '#5cb85c'
+        ]
+      }
+    ]
+  }
   visualisation.data = json.dumps(result_data)
   db.session.add(visualisation)
   db.session.commit()

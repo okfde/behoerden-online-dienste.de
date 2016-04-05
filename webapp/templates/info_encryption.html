@@ -17,8 +17,8 @@
       <i class="fa fa-unlock"></i>
     </div>
     <div>
-      <h3>Keine Verschlüsselung</h3>
-      <p>Der Host bietet keine Verschlüsselung an.</p>
+      <h3>Keine Absicherung</h3>
+      <p>Der Host bietet keine Absicherung an.</p>
     </div>
   </div>
   <div class="row-fluid">
@@ -26,7 +26,7 @@
       <i class="fa fa-lock"></i><i class="fa fa-minus"></i>
     </div>
     <div>
-      <h3>Extrem unsichere Verschlüsselung</h3>
+      <h3>Extrem unsichere Absicherung</h3>
       <p>Der Host unterstützt entweder SSLv2 oder hat die Heartbleed-Sicherheitslücke noch nicht geschlossen. Beides ist absolut fatal, da es zu einem Verlust des Private Keys führen kann.</p>
     </div>
   </div>
@@ -35,8 +35,8 @@
       <i class="fa fa-lock"></i>
     </div>
     <div>
-      <h3>Unsichere Verschlüsselung</h3>
-      <p>Der Host verwendet eine deutlich veraltete Verschlüsselungsmechanismen, so dass es recht leicht ist, diese zu knacken.</p>
+      <h3>Unsichere Absicherung</h3>
+      <p>Der Host verwendet eine deutlich veraltete Absicherungsmechanismen, so dass es recht leicht ist, diese zu knacken. Dies bedeutet entweder ein DH-Key von unter 1024 Bit, aktives SSLv3 ohne Fallback SCSV, eine aktive Anon-Cipher, unsichere TLS Renegotiation oder präferierte RC4- oder MD5-Cipher</p>
     </div>
   </div>
   <div class="row-fluid">
@@ -44,8 +44,8 @@
       <i class="fa fa-lock"></i>
     </div>
     <div>
-      <h3>Verbesserungswürdige Verschlüsselung</h3>
-      <p>Der Host verwendet veraltete Verschlüsselungsmechanismen, welche schwerer auszunutzende Sicherheitslücken aufweisen.</p>
+      <h3>Verbesserungswürdige Absicherung</h3>
+      <p>Der Host verwendet veraltete Absicherungsmechanismen, welche schwerer auszunutzende Sicherheitslücken aufweisen. Das bedeutet entweder ein DH-Key unter 2048 Bit, ein EDHC-Key unter 256 Bit, aktives SSLv3 mit aktivem Fallback SCSV, nicht präferierte RC4- oder MD5 Cipher, ein SHA1 Zertifikat, keine Unterstützung für TLS 1.2 oder eine fehlende Weiterleitung auf die HTTPS-Version der Seite.</p>
     </div>
   </div>
   <div class="row-fluid">
@@ -53,8 +53,8 @@
       <i class="fa fa-lock"></i>
     </div>
     <div>
-      <h3>Gute Verschlüsselung</h3>
-      <p>Der Host verwendet eine gute und damit zeitgemäße Verschlüsselungskonfiguration.</p>
+      <h3>Gute Absicherung</h3>
+      <p>Der Host verwendet eine gute und damit zeitgemäße Absicherungskonfiguration. Das bedeutet: ein DH-Key von 2048 Bit oder besser, ein EDHC-Key von 256 oder besser, keine unsicheren Cipher, keine offenen Sicherheitslücken, ein SHA2 Zertifikat und eine Weiterleitung auf die HTTPS-Version der Seite.</p>
     </div>
   </div>
   <div class="row-fluid">
@@ -62,8 +62,8 @@
       <i class="fa fa-lock"></i><i class="fa fa-plus"></i>
     </div>
     <div>
-      <h3>Ausgezeichnete Verschlüsselung</h3>
-      <p>Der Host verwendet eine ausgezeichnete und damit zukunftsfähige Verschlüsselungskonfiguration.</p>
+      <h3>Ausgezeichnete Absicherung</h3>
+      <p>Der Host verwendet eine ausgezeichnete und damit zukunftsfähige Absicherungskonfiguration. Das bedeutet zusätzlich die Unterstützung des HSTS-Headers und die Unterstützung von Fallback SCSV.</p>
     </div>
   </div>
   <div class="row-fluid">
