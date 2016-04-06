@@ -92,13 +92,6 @@ def get_sslyze(host):
           for module in target:
             if module.tag == 'certinfo':
               pass
-            elif module.tag == 'certinfo_basic':
-              for child in module:
-                if child.tag == 'certificateChain':
-                  if child.attrib['hasSha1SignedCertificate'] == 'True':
-                    result['sha1_cert'] = 1
-                  else:
-                    result['sha1_cert'] = 0
             elif module.tag == 'compression':
               pass
             elif module.tag == 'heartbleed':
@@ -153,6 +146,11 @@ def get_sslyze(host):
               pass
             elif module.tag == 'certinfo_basic':
               for child in module:
+                if child.tag == 'certificateChain':
+                  if child.attrib['hasSha1SignedCertificate'] == 'True':
+                    result['sha1_cert'] = 1
+                  else:
+                    result['sha1_cert'] = 0
                 if child.tag == 'certificateValidation':
                   for subchild in child:
                     if subchild.tag == 'hostnameValidation':
@@ -195,7 +193,7 @@ def get_sslyze(host):
   elif result['sslv2_available']:
     result['protocol_best'] = 'sslv2'
   if result['protocol_num'] == 1:
-    result['tls_fallback_scsv'] = 0
+    result['fallback_scsv_available'] = 0
   result['rc4_available'] = 'RC4' in cipher_string
   result['md5_available'] = 'MD5' in cipher_string
   result['pfs_available'] = 'ECDHE_' in cipher_string or 'DHE_' in cipher_string
@@ -1024,6 +1022,46 @@ def generate_visualisations():
   ### Ratsinformationssystem ###
   ##############################
   visualisation = Visualisation.query.filter_by(identifier='ris_available')
+  if visualisation.count():
+    visualisation = visualisation.first()
+  else:
+    visualisation = Visualisation()
+    visualisation.created = datetime.datetime.now()
+    visualisation.active = 1
+    visualisation.identifier = 'ris_available'
+  visualisation.updated = datetime.datetime.now()
+  service_sites = ServiceSite.query.filter_by(active=1).filter_by(service_id=2).filter(ServiceSite.quality_show!=None).filter_by().all()
+  result_raw = {
+    1: 0,
+    2: 0
+  }
+  for service_site in service_sites:
+    result_raw[2 if service_site.quality_show else 1] += 1
+  result_data = {
+    'labels': [
+      u'Kein Ratsinformationssystem',
+      u'Ratsinformationssystem Online'
+    ],
+    'datasets': [
+      {
+        'data': [
+          result_raw[1],
+          result_raw[2]
+        ],
+        'backgroundColor': [
+          '#d9534f',
+          '#5cb85c'
+        ]
+      }
+    ]
+  }
+  visualisation.data = json.dumps(result_data)
+  db.session.add(visualisation)
+  db.session.commit()
+  ##############################
+  ### Data-Service-Count ###
+  ##############################
+  visualisation = Visualisation.query.filter_by(identifier='data_service_count')
   if visualisation.count():
     visualisation = visualisation.first()
   else:
