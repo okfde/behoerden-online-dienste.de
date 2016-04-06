@@ -1092,7 +1092,7 @@ def generate_visualisations():
     descr.append(i)
   
   result_data = {
-    'labels': descr_raw,
+    'labels': descr,
     'datasets': [
       {
         'data': result_raw

@@ -133,15 +133,27 @@ def host(host):
 
 @app.route("/analysis/basics")
 def analysis_basics():
-  return render_template('analysis_basics.html')
+  visualisations_raw = Visualisation.query.all()
+  visualisations = {}
+  for visualisation_raw in visualisations_raw:
+    visualisations[visualisation_raw.identifier] = visualisation_raw
+  return render_template('analysis_basics.html', visualisations=visualisations)
 
 @app.route("/analysis/egovernment")
 def analysis_egovernment():
-  return render_template('analysis_egovernment.html')
+  visualisations_raw = Visualisation.query.all()
+  visualisations = {}
+  for visualisation_raw in visualisations_raw:
+    visualisations[visualisation_raw.identifier] = visualisation_raw
+  return render_template('analysis_egovernment.html', visualisations=visualisations)
 
 @app.route("/analysis/data")
 def analysis_data():
-  return render_template('analysis_data.html')
+  visualisations_raw = Visualisation.query.all()
+  visualisations = {}
+  for visualisation_raw in visualisations_raw:
+    visualisations[visualisation_raw.identifier] = visualisation_raw
+  return render_template('analysis_data.html', visualisations=visualisations)
 
 @app.route("/analysis/encryption")
 def analysis_encryption():

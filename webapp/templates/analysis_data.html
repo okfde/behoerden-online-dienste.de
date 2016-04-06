@@ -8,8 +8,11 @@
 </div>
 <div class="container">
   <div class="row-fluid">
-    <div class="col-md-12">
-      <h2>soon</h2>
+    <div class="col-md-6 col-xs-12">
+      <h2>Wie viele Daten-Dienste bietet eine Kommune an?</h2>
+    </div>
+    <div class="col-md-6 col-xs-12">
+      <canvas id="data_service_count"></canvas>
     </div>
   </div>
 </div>
@@ -17,4 +20,9 @@
 
 {% block scripts %}
 {{super()}}
+<script>
+  $(document).ready(function() {
+    new Chart(document.getElementById("data_service_count").getContext("2d"), { type: 'bar', data: {{ visualisations['data_service_count']['data']|safe }} });
+  });
+</script>
 {% endblock %}
