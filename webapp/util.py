@@ -1068,30 +1068,34 @@ def generate_visualisations():
     visualisation = Visualisation()
     visualisation.created = datetime.datetime.now()
     visualisation.active = 1
-    visualisation.identifier = 'ris_available'
+    visualisation.identifier = 'data_service_count'
   visualisation.updated = datetime.datetime.now()
-  service_sites = ServiceSite.query.filter_by(active=1).filter_by(service_id=2).filter(ServiceSite.quality_show!=None).filter_by().all()
-  result_raw = {
-    1: 0,
-    2: 0
-  }
-  for service_site in service_sites:
-    result_raw[2 if service_site.quality_show else 1] += 1
+  service_list = []
+  services = Service.query.filter_by(active=1).filter_by(service_group_id=2).order_by(Service.name).all()
+  for service in services:
+    service_list.append(service.id)
+  
+  result_raw = []
+  for i in range(0, 30):
+    result_raw.append(0)
+    
+  hosts = Host.query.filter_by(active=1).all()
+  for host in hosts:
+    service_count = ServiceSite.query.filter_by(quality_show=1).filter_by(host_id=host.id).filter(ServiceSite.service_id.in_(service_list)).count()
+    result_raw[service_count] += 1
+  
+  while result_raw[-1] == 0:
+    result_raw.pop()
+  del result_raw[0]
+  descr = []
+  for i in range(1, len(result_raw)):
+    descr.append(i)
+  
   result_data = {
-    'labels': [
-      u'Kein Ratsinformationssystem',
-      u'Ratsinformationssystem Online'
-    ],
+    'labels': descr_raw,
     'datasets': [
       {
-        'data': [
-          result_raw[1],
-          result_raw[2]
-        ],
-        'backgroundColor': [
-          '#d9534f',
-          '#5cb85c'
-        ]
+        'data': result_raw
       }
     ]
   }
