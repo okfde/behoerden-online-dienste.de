@@ -33,9 +33,7 @@
 <script>
   $(document).ready(function() {
     new Chart(document.getElementById("encryption_yes_no").getContext("2d"), { type: 'doughnut', data: {{ visualisations['encryption_yes_no']['data']|safe }} });
-    //new Chart(document.getElementById("encryption_yes_no").getContext("2d")).Doughnut({{ visualisations['encryption_yes_no']['data']|safe }}, { });
     new Chart(document.getElementById("encryption_quality").getContext("2d"), { type: 'doughnut', data: {{ visualisations['encryption_quality']['data']|safe }} });
-    //new Chart(document.getElementById("encryption_quality").getContext("2d")).Doughnut({{ visualisations['encryption_quality']['data']|safe }}, {});
   });
 </script>
 {% endblock %}

@@ -1019,6 +1019,53 @@ def import_osm():
 
 def generate_visualisations():
   ##############################
+  ### eGovernment-Service-Count ###
+  ##############################
+  visualisation = Visualisation.query.filter_by(identifier='egovernment_service_count')
+  if visualisation.count():
+    visualisation = visualisation.first()
+  else:
+    visualisation = Visualisation()
+    visualisation.created = datetime.datetime.now()
+    visualisation.active = 1
+    visualisation.identifier = 'egovernment_service_count'
+  visualisation.updated = datetime.datetime.now()
+  service_list = []
+  services = Service.query.filter_by(active=1).filter_by(service_group_id=1).order_by(Service.name).all()
+  for service in services:
+    service_list.append(service.id)
+  
+  result_raw = []
+  for i in range(0, 100):
+    result_raw.append(0)
+    
+  hosts = Host.query.filter_by(active=1).all()
+  for host in hosts:
+    service_count = ServiceSite.query.filter_by(quality_show=1).filter_by(host_id=host.id).filter(ServiceSite.service_id.in_(service_list)).count()
+    # Stupid Bugfix, TODO: woher kommen 52 Services?
+    if service_count < 30:
+      result_raw[service_count] += 1
+  
+  while result_raw[-1] == 0:
+    result_raw.pop()
+  del result_raw[0]
+  descr = []
+  for i in range(1, len(result_raw)):
+    descr.append(i)
+  
+  result_data = {
+    'labels': descr,
+    'datasets': [
+      {
+        'data': result_raw
+      }
+    ]
+  }
+  visualisation.data = json.dumps(result_data)
+  db.session.add(visualisation)
+  db.session.commit()
+  
+  ##############################
   ### Ratsinformationssystem ###
   ##############################
   visualisation = Visualisation.query.filter_by(identifier='ris_available')
@@ -1058,6 +1105,7 @@ def generate_visualisations():
   visualisation.data = json.dumps(result_data)
   db.session.add(visualisation)
   db.session.commit()
+  
   ##############################
   ### Data-Service-Count ###
   ##############################
