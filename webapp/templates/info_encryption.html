@@ -3,7 +3,7 @@
 {% block content %}
 <div class="jumbotron">
   <div class="container">
-    <h1>Informationen: Verschlüsselung</h1>
+    <h1>Informationen: Sichere Datenübertragung im Web</h1>
   </div>
 </div>
 <div class="container">
@@ -17,8 +17,8 @@
       <i class="fa fa-unlock"></i>
     </div>
     <div>
-      <h3>Keine Absicherung</h3>
-      <p>Der Host bietet keine Absicherung an.</p>
+      <h3>Keine Sicherheit</h3>
+      <p>Der Host bietet keine Sicherheit bei der Datenübertragung an.</p>
     </div>
   </div>
   <div class="row-fluid">
@@ -26,8 +26,8 @@
       <i class="fa fa-lock"></i><i class="fa fa-minus"></i>
     </div>
     <div>
-      <h3>Extrem unsichere Absicherung</h3>
-      <p>Der Host unterstützt entweder SSLv2 oder hat die Heartbleed-Sicherheitslücke noch nicht geschlossen. Beides ist absolut fatal, da es zu einem Verlust der Vertraulichkeit der gesamten Kommunikation oder sogar des Private Keys führen kann.</p>
+      <h3>Schwerwiegendes Sicherheitsproblem bei der Datenübertragung</h3>
+      <p>Der Host unterstützt entweder SSLv2 oder hat die Heartbleed-Sicherheitslücke noch nicht geschlossen. Beides stellt eine schwerwiegende Schwachstelle dar, da es zu einem Verlust der Vertraulichkeit der gesamten Kommunikation oder sogar des Private Keys führen kann. Hier besteht dringlicher Handlungsbedarf.</p>
     </div>
   </div>
   <div class="row-fluid">
@@ -35,7 +35,7 @@
       <i class="fa fa-lock"></i>
     </div>
     <div>
-      <h3>Unsichere Absicherung</h3>
+      <h3>Sicherheitsproblem bei der Datenübertragung</h3>
       <p>Der Host verwendet einen deutlich veralteten Absicherungsmechanismus, so dass es recht leicht ist, diesen zu knacken. Dies bedeutet entweder einen DH-Key von unter 1024 Bit, aktives SSLv3 ohne Fallback SCSV, eine aktive Anon-Cipher, unsichere TLS-Renegotiation oder präferierte RC4- oder MD5-Cipher.</p>
     </div>
   </div>
@@ -91,7 +91,7 @@
   <div class="row-fluid">
     <div class="col-md-12">
       <h2 id="ssl-vs-tls">Welcher Unterschied besteht zwischen SSL und TLS?</h2>
-      <p>SSL ist der verbreitete Oberbegriff für verschiedene Protokolle: SSL 2, SSL 3, TLS 1.0, TLS 1.1, TLS 1.2. Die beiden Protokolle SSL 2 und SSL 3 sollten nicht mehr eingesetzt werden, da sie schwerwiegende Sicherheitslücken enthalten. Lediglich TLS 1.2 ist vollständig sicher. Korrekterweise müsste man also von TLS-Verschlüsselung reden. Allerdings hat sich der Begriff SSL so sehr eingebürgert, dass mit SSL nahezu immer TLS gemeint wird.</p>
+      <p>SSL ist der verbreitete Oberbegriff für verschiedene Protokolle: SSL 2, SSL 3, TLS 1.0, TLS 1.1, TLS 1.2. Die beiden Protokolle SSL 2 und SSL 3 sollten nicht mehr eingesetzt werden, da sie schwerwiegende Sicherheitslücken enthalten. Lediglich TLS 1.2 ist nach Stand der Technik sicher. Korrekterweise müsste man also von TLS-Verschlüsselung reden. Allerdings hat sich der Begriff SSL so sehr eingebürgert, dass mit SSL nahezu immer TLS gemeint wird.</p>
     </div>
   </div>
   <div class="row-fluid">
@@ -116,13 +116,13 @@
   <div class="row-fluid">
     <div class="col-md-12">
       <h2 id="ssl3">Warum sollte SSL Version 3 abgeschaltet werden?</h2>
-      <p>Von SSL v3 wurde schon länger abgeraten. Seit <a href="http://www.heise.de/security/meldung/Poodle-Experten-warnen-vor-Angriff-auf-Internet-Verschluesselung-2424122.html">im Oktober 2014 die POODLE-Attacke veröffentlicht</a> wurde, kann man SSL 3 auch gleich auf die Verschlüsselung verzichten - es macht einfach keinen Unterschied. Wenn man modernere Verfahren (TLS 1.0 bis TLS 1.2) unterstützt und mit TLS_FALLBACK_SCSV eine Dowgrade-Attacke unterbindet, ist ein aktiviertes SSL 3 nicht mehr ganz so fatal, da der Browser dann nur die moderneren Verfahren nutzt. Aber auch mit TLS_FALLBACK_SCSV ist ein aktiviertes SSL 3 ein Sicherheitsrisiko, dem man sich ohne Not aussetzt.</p>
+      <p>Von SSL v3 wurde schon länger abgeraten. Seit <a href="http://www.heise.de/security/meldung/Poodle-Experten-warnen-vor-Angriff-auf-Internet-Verschluesselung-2424122.html">im Oktober 2014 die POODLE-Attacke veröffentlicht</a> wurde, kann man SSL 3 auch gleich auf die Verschlüsselung verzichten - es macht einfach keinen Unterschied. Wenn man modernere Verfahren (TLS 1.0 bis TLS 1.2) unterstützt und mit TLS_FALLBACK_SCSV eine Dowgrade-Attacke unterbindet, ist ein aktiviertes SSL 3 weniger problematisch, da der Browser dann nur die moderneren Verfahren nutzt. Aber auch mit TLS_FALLBACK_SCSV ist ein aktiviertes SSL 3 ein Sicherheitsrisiko, dem man sich ohne Not aussetzt.</p>
     </div>
   </div>
   <div class="row-fluid">
     <div class="col-md-12">
       <h2 id="sha1">Warum sollte ein SHA2- (und kein SHA1-) Zertifikat genutzt werden?</h2>
-      <p>SHA1 steht schon länger im Verdacht, nicht sicher zu sein. Schrittweise <a href="http://www.heise.de/security/meldung/Todesstoss-fuer-SHA-1-steht-bevor-2849484.html">werden praktikable Angriffe darauf entwickelt</a>. Dies hat die Browserhersteller dazu bewogen, bei einem SHA1-Zertifikat je nach Ablaufdatum des Zertifikates ein gelbes oder sogar ein rotes Schloss mehr in der Browserzeile anzuzeigen. SHA1-Zertifikate müssen nicht nur beim Seiten-Zertifikat verhindert werden, sondern auch bei allen Zwischenzertifikaten.</p>
+      <p>SHA1 steht schon länger im Verdacht, nicht sicher zu sein. Schrittweise <a href="http://www.heise.de/security/meldung/Todesstoss-fuer-SHA-1-steht-bevor-2849484.html">werden praktikable Angriffe darauf entwickelt</a>. Dies hat die Browserhersteller dazu bewogen, bei einem SHA1-Zertifikat je nach Ablaufdatum des Zertifikates ein gelbes oder sogar ein rotes Schloss in der Browserzeile anzuzeigen. SHA1-Zertifikate müssen nicht nur beim Seiten-Zertifikat verhindert werden, sondern auch bei allen Zwischenzertifikaten.</p>
     </div>
   </div>
   <div class="row-fluid">
