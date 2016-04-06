@@ -92,11 +92,13 @@ def get_sslyze(host):
           for module in target:
             if module.tag == 'certinfo':
               pass
-            elif module.tag == 'certificateChain':
-              if module.attr['hasSha1SignedCertificate'] == 'True':
-                result['sha1_cert'] = True
-              else:
-                result['sha1_cert'] = False
+            elif module.tag == 'certinfo_basic':
+              for child in module:
+                if child.tag == 'certificateChain':
+                  if child.attrib['hasSha1SignedCertificate'] == 'True':
+                    result['sha1_cert'] = 1
+                  else:
+                    result['sha1_cert'] = 0
             elif module.tag == 'compression':
               pass
             elif module.tag == 'heartbleed':
@@ -192,6 +194,8 @@ def get_sslyze(host):
     result['protocol_best'] = 'sslv3'
   elif result['sslv2_available']:
     result['protocol_best'] = 'sslv2'
+  if result['protocol_num'] == 1:
+    result['tls_fallback_scsv'] = 0
   result['rc4_available'] = 'RC4' in cipher_string
   result['md5_available'] = 'MD5' in cipher_string
   result['pfs_available'] = 'ECDHE_' in cipher_string or 'DHE_' in cipher_string
