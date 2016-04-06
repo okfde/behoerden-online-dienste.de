@@ -27,7 +27,7 @@
     </div>
     <div>
       <h3>Extrem unsichere Absicherung</h3>
-      <p>Der Host unterstützt entweder SSLv2 oder hat die Heartbleed-Sicherheitslücke noch nicht geschlossen. Beides ist absolut fatal, da es zu einem Verlust des Private Keys führen kann.</p>
+      <p>Der Host unterstützt entweder SSLv2 oder hat die Heartbleed-Sicherheitslücke noch nicht geschlossen. Beides ist absolut fatal, da es zu einem Verlust der Vertraulichkeit der gesamten Kommunikation oder sogar des Private Keys führen kann.</p>
     </div>
   </div>
   <div class="row-fluid">
@@ -36,7 +36,7 @@
     </div>
     <div>
       <h3>Unsichere Absicherung</h3>
-      <p>Der Host verwendet einen deutlich veralteten Absicherungsmechanismus, so dass es recht leicht ist, diesen zu knacken. Dies bedeutet entweder einen DH-Key von unter 1024 Bit, aktives SSLv3 ohne Fallback SCSV, eine aktive Anon-Cipher, unsichere TLS Renegotiation oder präferierte RC4- oder MD5-Cipher</p>
+      <p>Der Host verwendet einen deutlich veralteten Absicherungsmechanismus, so dass es recht leicht ist, diesen zu knacken. Dies bedeutet entweder einen DH-Key von unter 1024 Bit, aktives SSLv3 ohne Fallback SCSV, eine aktive Anon-Cipher, unsichere TLS-Renegotiation oder präferierte RC4- oder MD5-Cipher.</p>
     </div>
   </div>
   <div class="row-fluid">
@@ -45,7 +45,7 @@
     </div>
     <div>
       <h3>Verbesserungswürdige Absicherung</h3>
-      <p>Der Host verwendet veraltete Absicherungsmechanismen, welche schwerer auszunutzende Sicherheitslücken aufweisen. Das bedeutet entweder ein DH-Key unter 2048 Bit, ein EDHC-Key unter 256 Bit, aktives SSLv3 mit aktivem Fallback SCSV, nicht präferierte RC4- oder MD5 Cipher, ein SHA1 Zertifikat, keine Unterstützung für TLS 1.2 oder eine fehlende Weiterleitung auf die HTTPS-Version der Seite.</p>
+      <p>Der Host verwendet veraltete Absicherungsmechanismen, welche potentiell ausnutzbare Sicherheitslücken aufweisen. Das bedeutet entweder ein DH-Key unter 2048 Bit, ein EDHC-Key unter 256 Bit, aktives SSLv3 mit aktivem Fallback SCSV, nicht präferierte RC4- oder MD5 Cipher, ein SHA1-Zertifikat, keine Unterstützung für TLS 1.2 oder eine fehlende Weiterleitung auf die HTTPS-Version der Seite.</p>
     </div>
   </div>
   <div class="row-fluid">
@@ -54,7 +54,7 @@
     </div>
     <div>
       <h3>Gute Absicherung</h3>
-      <p>Der Host verwendet eine gute und damit zeitgemäße Absicherungskonfiguration. Das bedeutet: ein DH-Key von 2048 Bit oder besser, ein EDHC-Key von 256 oder besser, keine unsicheren Cipher, keine offenen Sicherheitslücken, ein SHA2 Zertifikat und eine Weiterleitung auf die HTTPS-Version der Seite.</p>
+      <p>Der Host verwendet eine zeitgemäße Absicherungskonfiguration. Das bedeutet: ein DH-Key von 2048 Bit oder besser, ein EDHC-Key von 256 oder besser, keine unsicheren Cipher, keine offenen Sicherheitslücken, ein SHA2-Zertifikat und eine Weiterleitung auf die HTTPS-Version der Seite.</p>
     </div>
   </div>
   <div class="row-fluid">
@@ -63,7 +63,7 @@
     </div>
     <div>
       <h3>Ausgezeichnete Absicherung</h3>
-      <p>Der Host verwendet eine ausgezeichnete und damit zukunftsfähige Absicherungskonfiguration. Das bedeutet zusätzlich die Unterstützung des HSTS-Headers und die Unterstützung von Fallback SCSV.</p>
+      <p>Der Host verwendet eine zukunftsfähige Absicherungskonfiguration. Das bedeutet zusätzlich zur zuvor genannten zeitgemäßen Konfiguration die Unterstützung des HSTS-Headers und die Unterstützung von Fallback SCSV.</p>
     </div>
   </div>
   <div class="row-fluid">
@@ -78,32 +78,32 @@
   <div class="row-fluid">
     <div class="col-md-12">
       <h2 id="why-ssl">Wofür braucht eine Seite SSL?</h2>
-      <p>Der Secure Sockets Layer, kurz SSL, sorgt für eine verschlüsselte Verbindung zwischen dem Besucher und dem Server der Website. Dies ist wichtig für jede Form persönlicher Daten, also z.B. für Shops oder Kontaktformulare. Aber auch für reguläre Website lohnt es sich, SSL zu nutzen, da es leichte SEO-Vorteile bringt und das Identifizieren von für die Überwachung lohnenswerten Ziele erschwert.</p>
-      <p>SSL braucht ein sogenanntes SSL-Zertifikat, welches speziell für die Domain bestellt werden muss. </p>
+      <p>Der Secure Sockets Layer, kurz SSL, sorgt für eine verschlüsselte Verbindung zwischen dem Besucher und dem Server der Website. Dies ist wichtig bei Übertragung personenbezogener Daten, also z. B. für Shops oder Kontaktformulare. Aber auch für reguläre Websites lohnt es sich, SSL zu nutzen, da es leichte SEO-Vorteile bringt und das Identifizieren von für die Überwachung lohnenswerten Ziele erschwert.</p>
+      <p>SSL braucht ein sogenanntes SSL-Zertifikat, welches speziell für die Domain beschafft werden muss. </p>
     </div>
   </div>
   <div class="row-fluid">
     <div class="col-md-12">
       <h2 id="price">Macht ein teureres Zertifikat eine Seite sicherer?</h2>
-      <p>Nein. Solange das Zertifikat ein SHA2-Zertifikat ist, ist von der Sicherheit her alles abgedeckt. Teurere Zertifikate verbessern nur die Validierung beim Kauf. Dies hilft aber nicht in Bezug auf Sicherheit.</p>
+      <p>Nein. Solange das Zertifikat ein SHA2-Zertifikat ist, ist die technische Sicherheit gegeben. Teurere Zertifikate verbessern die Überprüfung der Identität des Antragstellers beim Kauf. Dies verbessert aber nicht die Übertragungssicherheit.</p>
     </div>
   </div>
   <div class="row-fluid">
     <div class="col-md-12">
       <h2 id="ssl-vs-tls">Welcher Unterschied besteht zwischen SSL und TLS?</h2>
-      <p>SSL ist der verbreitete Oberbegriff für verschiedene Protokolle: SSL 2, SSL 3, TLS 1.0, TLS 1.1, TLS 1.2. Die beiden Protokolle SSL 2 und SSL 3 sollten nicht mehr eingesetzt werden, da sie schwere Sicherheitslücken enthalten. Lediglich TLS 1.2 ist vollständig sicher. Korrekterweise müsste man also von TLS-Verschlüsselung reden. Allerdings hat sich der Begriff SSL so sehr eingebürgert, dass mit SSL nahezu immer TLS gemeint wird.</p>
+      <p>SSL ist der verbreitete Oberbegriff für verschiedene Protokolle: SSL 2, SSL 3, TLS 1.0, TLS 1.1, TLS 1.2. Die beiden Protokolle SSL 2 und SSL 3 sollten nicht mehr eingesetzt werden, da sie schwerwiegende Sicherheitslücken enthalten. Lediglich TLS 1.2 ist vollständig sicher. Korrekterweise müsste man also von TLS-Verschlüsselung reden. Allerdings hat sich der Begriff SSL so sehr eingebürgert, dass mit SSL nahezu immer TLS gemeint wird.</p>
     </div>
   </div>
   <div class="row-fluid">
     <div class="col-md-12">
       <h2 id="extended-validation">Was bedeutet die grüne Adresszeile mit Unternehmensnamen?</h2>
-      <p>Bei den grünen Adresszeilen handelt es sich um Extended-Validation-Zertifikate, kurz EV-Zertifikate. Diese bringen keinen Sicherheitsgewinn, geben dem Seitenbesucher aber ein positives Signal, weswegen sie sich ab und an für Shops eignen. EV-Zertifikate sind erheblich teurer als die normalen domainvalidierten Zertifikate.</p>
+      <p>Bei den grünen Adresszeilen handelt es sich um Extended-Validation-Zertifikate, kurz EV-Zertifikate. Diese bringen keinen Sicherheitsgewinn bei der Datenübertragung, visualisieren dem Seitenbesucher aber dass besondere Kriterien bei der Zertifikatsvergabe eingehalten wurden, weswegen sie sich beispielsweise für Webshops eignen können. EV-Zertifikate sind erheblich teurer als die normalen domainvalidierten Zertifikate.</p>
     </div>
   </div>
   <div class="row-fluid">
     <div class="col-md-12">
       <h2 id="sslfiles">Was bedeuten diese ganzen SSL-Dateien?</h2>
-      <p>Wenn man das erste Mal mit SSL zu tun hat, sind die verschiedenen Dateien oft irritierend. Deswegen hier eine Funktion der Dateien.</p>
+      <p>Wenn man das erste Mal mit SSL zu tun hat, sind die verschiedenen Dateien oft irritierend. Deswegen hier eine Funktionsbeschreibung der Dateien.</p>
       <ul>
         <li>Der <strong>Private Key</strong>, meist mit der Dateiendung .key, ist der Kern der Verschlüsselung. Wenn irgendwer unerlaubt den Key bekommt, kann er damit die Verschlüsselung brechen.</li>
         <li>Mit dem <strong>Zertifikat</strong>, meist mit der Dateiendung .crt oder .pem, sagt der SSL-Zertifikatgeber, dass der eingesetzte Key ok ist.</li>
@@ -115,8 +115,8 @@
   </div>
   <div class="row-fluid">
     <div class="col-md-12">
-      <h2 id="ssl3">Warum sollte SSL Version 3 abschalten werden</h2>
-      <p>Von SSL 3 wurde schon länger abgeraten. Seit <a href="http://www.heise.de/security/meldung/Poodle-Experten-warnen-vor-Angriff-auf-Internet-Verschluesselung-2424122.html">im Oktober 2014 die POODLE-Attacke veröffentlicht</a> wurde, kann man SSL 3 auch gleich auf die Verschlüsselung verzichten - es macht einfach keinen Unterschied. Wenn man modernere Verfahren (TLS 1.0 bis TLS 1.2) unterstützt und mit TLS_FALLBACK_SCSV ein Dowgrade-Attacke unterbindet, ist ein aktiviertes SSL 3 nicht mehr ganz so fatal, da der Browser dann nur die moderneren Verfahren nutzt. Aber auch mit TLS_FALLBACK_SCSV ist ein aktiviertes SSL 3 ein Sicherheitsrisiko, dem man sich ohne Not aussetzt.</p>
+      <h2 id="ssl3">Warum sollte SSL Version 3 abgeschaltet werden?</h2>
+      <p>Von SSL v3 wurde schon länger abgeraten. Seit <a href="http://www.heise.de/security/meldung/Poodle-Experten-warnen-vor-Angriff-auf-Internet-Verschluesselung-2424122.html">im Oktober 2014 die POODLE-Attacke veröffentlicht</a> wurde, kann man SSL 3 auch gleich auf die Verschlüsselung verzichten - es macht einfach keinen Unterschied. Wenn man modernere Verfahren (TLS 1.0 bis TLS 1.2) unterstützt und mit TLS_FALLBACK_SCSV ein Dowgrade-Attacke unterbindet, ist ein aktiviertes SSL 3 nicht mehr ganz so fatal, da der Browser dann nur die moderneren Verfahren nutzt. Aber auch mit TLS_FALLBACK_SCSV ist ein aktiviertes SSL 3 ein Sicherheitsrisiko, dem man sich ohne Not aussetzt.</p>
     </div>
   </div>
   <div class="row-fluid">

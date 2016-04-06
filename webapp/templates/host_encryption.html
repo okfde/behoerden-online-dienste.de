@@ -40,7 +40,7 @@
       <span class="fa fa-plus-circle"></span>
     </div>
     <div class="col-sm-10">
-      <h2>{{ ssl_test.Host.host }} verwendet ein SHA1 Zertifikat.</h2>
+      <h2>{{ ssl_test.Host.host }} verwendet ein SHA1-Zertifikat.</h2>
       <p>Ein Wechsel auf ein SHA2-Zertifikat ist erforderlich. <a href="/faq/ssl#sha1">Weitere Informationen.</a></p>
     </div>
   </div>
@@ -50,7 +50,7 @@
       <span class="fa fa-plus-circle"></span>
     </div>
     <div class="col-sm-10">
-      <h2>{{ ssl_test.Host.host }} verwendet ein SHA2 Zertifikat.</h2>
+      <h2>{{ ssl_test.Host.host }} verwendet ein SHA2-Zertifikat.</h2>
       <p>Das ist gut. <a href="/faq/ssl#sha1">Weitere Informationen.</a></p>
     </div>
   </div>
@@ -83,7 +83,7 @@
     </div>
     <div class="col-sm-10">
       <h2>{{ ssl_test.Host.host }} bietet {% if ssl_test.ssl3_available and not ssl_test.ssl2_available %}SSLv3{% elif ssl_test.ssl2_available and not ssl_test.ssl3_available %}SSLv2{% else %}sowohl SSLv2 als auch SSLv3{% endif %} an.</h2>
-      <p>{% if ssl_test.ssl2_available %}SSL2 ist schon sehr lange vollständig geknackt.{% if ssl_test.ssl3_available %} {% endif %}{% endif %}{% if ssl_test.ssl3_available %}SSL3 ist seit der POODLE-Sicherheitslücke endgültig geknackt, daher sollte SSL3 nicht mehr amngeboten werden.{% endif %} <a href="/faq/ssl#ssl23">Weitere Informationen.</a></p>
+      <p>{% if ssl_test.ssl2_available %}SSL2 ist schon sehr lange vollständig geknackt.{% if ssl_test.ssl3_available %} {% endif %}{% endif %}{% if ssl_test.ssl3_available %}SSL3 ist seit der POODLE-Sicherheitslücke endgültig geknackt, daher sollte SSL3 nicht mehr angeboten werden.{% endif %} <a href="/faq/ssl#ssl23">Weitere Informationen.</a></p>
     </div>
   </div>
   {% else %}
@@ -115,7 +115,7 @@
     </div>
     <div class="col-sm-10">
       <h2>{{ ssl_test.Host.host }} bietet Perfect Forward Secrecy mit einem schwachen DH-Schlüssel.</h2>
-      <p>Ein DH-Schlüssel von {{ ssl_test.dhe_key }} Bit entspricht nicht dem Stand der Technik. Aufgrund von einigen alten Systemen ist dies leider ab und an notwendig. <a href="/faq/ssl#pfs">Weitere Informationen.</a></p>
+      <p>Ein DH-Schlüssel von {{ ssl_test.dhe_key }} Bit entspricht nicht dem Stand der Technik. Zur Unterstützung von Alt-Systemen ist die Verwendung kurzer Schlüssel leider notwendig. <a href="/faq/ssl#pfs">Weitere Informationen.</a></p>
     </div>
   </div>
   {% else %}
@@ -147,7 +147,7 @@
     </div>
     <div class="col-sm-10">
       <h2>{{ ssl_test.Host.host }} beherrscht Fallback SCSV.</h2>
-      <p>Fallback SCSV verhindert, dass Angreifer die Kommuniktion des Servers auf einen unsicheren Verschlüsselungsmechanismus absenken können. <a href="/faq/ssl#scsv">Weitere Informationen.</a></p>
+      <p>Fallback SCSV verhindert, dass Angreifer die Kommunikation des Servers auf einen unsicheren Verschlüsselungsmechanismus absenken können. <a href="/faq/ssl#scsv">Weitere Informationen.</a></p>
     </div>
   </div>
   {% else %}
@@ -157,7 +157,7 @@
     </div>
     <div class="col-sm-10">
       <h2>{{ ssl_test.Host.host }} beherrscht kein Fallback SCSV</h2>
-      <p>Angreifer können ohne Fallback SCSV die Kommuniktion des Servers auf eine unsichere Verschlüsselungsmechanismus absenken. <a href="/faq/ssl#scsv">Weitere Informationen.</a></p>
+      <p>Angreifer können ohne Fallback SCSV die Kommunikation des Servers auf einen unsicheren Verschlüsselungsmechanismus absenken. <a href="/faq/ssl#scsv">Weitere Informationen.</a></p>
     </div>
   </div>
   {% endif %}
