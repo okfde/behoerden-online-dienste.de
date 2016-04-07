@@ -382,7 +382,7 @@ def ssl_check_single(host_id):
                 test_result.ssl_forward = 1
               else:
                 test_result.ssl_forward = 0
-            except requests.exceptions.SSLError, requests.exceptions.ConnectionError:
+            except (requests.exceptions.SSLError, requests.exceptions.ConnectionError):
               print "CRITICAL SSL ERROR"
   db.session.add(test_result)
   db.session.commit()
