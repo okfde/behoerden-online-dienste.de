@@ -382,7 +382,7 @@ def ssl_check_single(host_id):
                 test_result.ssl_forward = 1
               else:
                 test_result.ssl_forward = 0
-            except requests.exceptions.SSLError:
+            except requests.exceptions.SSLError, requests.exceptions.ConnectionError:
               print "CRITICAL SSL ERROR"
   db.session.add(test_result)
   db.session.commit()
@@ -1031,7 +1031,7 @@ def generate_visualisations():
     visualisation.identifier = 'egovernment_service_count'
   visualisation.updated = datetime.datetime.now()
   service_list = []
-  services = Service.query.filter_by(active=1).filter_by(service_group_id=1).order_by(Service.name).all()
+  services = Service.query.filter_by(active=1).filter_by(service_group_id=2).order_by(Service.name).all()
   for service in services:
     service_list.append(service.id)
   
@@ -1042,9 +1042,7 @@ def generate_visualisations():
   hosts = Host.query.filter_by(active=1).all()
   for host in hosts:
     service_count = ServiceSite.query.filter_by(quality_show=1).filter_by(host_id=host.id).filter(ServiceSite.service_id.in_(service_list)).count()
-    # Stupid Bugfix, TODO: woher kommen 52 Services?
-    if service_count < 30:
-      result_raw[service_count] += 1
+    result_raw[service_count] += 1
   
   while result_raw[-1] == 0:
     result_raw.pop()
@@ -1119,7 +1117,7 @@ def generate_visualisations():
     visualisation.identifier = 'data_service_count'
   visualisation.updated = datetime.datetime.now()
   service_list = []
-  services = Service.query.filter_by(active=1).filter_by(service_group_id=2).order_by(Service.name).all()
+  services = Service.query.filter_by(active=1).filter_by(service_group_id=3).order_by(Service.name).all()
   for service in services:
     service_list.append(service.id)
   

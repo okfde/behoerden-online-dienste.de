@@ -12,7 +12,7 @@
       <h2>Wie viele eGovernment-Dienste bietet eine Kommune an?</h2>
     </div>
     <div class="col-md-6 col-xs-12">
-      <canvas id="data_service_count"></canvas>
+      <canvas id="egovernment_service_count"></canvas>
     </div>
   </div>
 </div>
@@ -22,7 +22,7 @@
 {{super()}}
 <script>
   $(document).ready(function() {
-    new Chart(document.getElementById("data_service_count").getContext("2d"), { type: 'bar', data: {{ visualisations['data_service_count']['data']|safe }} });
+    new Chart(document.getElementById("egovernment_service_count").getContext("2d"), { type: 'bar', data: {{ visualisations['egovernment_service_count']['data']|safe }} });
   });
 </script>
 {% endblock %}
