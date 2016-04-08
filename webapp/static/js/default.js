@@ -1,4 +1,5 @@
 $(document).ready(function() {
+  // charts
   $('.chart-square').each(function(index) {
     $(this).attr({
       'width': $(this).width(),
@@ -14,18 +15,13 @@ $(document).ready(function() {
     });
   });
   Chart.defaults.global.legend.display = false;
-  //Chart.defaults.global.tooltipFontSize = 10;
-  //Chart.defaults.global.responsive = true;
   
-  $('#region-host-button a').click(function(event) {
-    event.preventDefault();
-    $('#region-host-form').css({'display': 'block'});
-  });
-  $('#new-host-type').change(function() {
-    if ($('#new-host-type').val() == '-1') {
-      $('#new-host-type').replaceWith('<input name="new-host-type" id="new-host-type" class="form-control" placeholder="Dienst zur KFZ-Anmeldung">');
+  // region
+  $('#new-service-site-service').change(function() {
+    if ($(this).val() == -1) {
+      $(this).replaceWith('<input type="text" name="new-service-site-service-string" id="new-service-site-service-string" class="form-control">');
     }
-  });
+  })
   
   // index
 	if ($('#fsrb').exists()) {

@@ -34,6 +34,40 @@ from subprocess import call
 from sqlalchemy import or_, desc, asc
 import re, time, elasticsearch
 
+URL_REGEX = re.compile(
+    u"^"
+    # protocol identifier
+    u"(?:(?:https?|ftp)://)"
+    # user:pass authentication
+    u"(?:\S+(?::\S*)?@)?"
+    u"(?:"
+    # IP address exclusion
+    # private & local networks
+    u"(?!(?:10|127)(?:\.\d{1,3}){3})"
+    u"(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})"
+    u"(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})"
+    # IP address dotted notation octets
+    # excludes loopback network 0.0.0.0
+    # excludes reserved space >= 224.0.0.0
+    # excludes network & broadcast addresses
+    # (first & last IP address of each class)
+    u"(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])"
+    u"(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}"
+    u"(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))"
+    u"|"
+    # host name
+    u"(?:(?:[a-z\u00a1-\uffff0-9]-?)*[a-z\u00a1-\uffff0-9]+)"
+    # domain name
+    u"(?:\.(?:[a-z\u00a1-\uffff0-9]-?)*[a-z\u00a1-\uffff0-9]+)*"
+    # TLD identifier
+    u"(?:\.(?:[a-z\u00a1-\uffff]{2,}))"
+    u")"
+    # port number
+    u"(?::\d{2,5})?"
+    # resource path
+    u"(?:/\S*)?"
+    u"$"
+    , re.UNICODE)
 
 @app.route('/')
 def index():
@@ -122,8 +156,74 @@ def region(region_slug):
   for service_site in service_sites_raw:
     service_sites[service_site.Service.service_group_id].append(service_site)
   hosts = Host.query.filter_by(active=1).join(ServiceSite).filter_by(region_id=region.id).filter_by(active=1).join(Service).filter_by(make_ssl_test=1).all()
-  return render_template('region.html', region=region, service_sites=service_sites, hosts=hosts)
+  services_raw = Service.query.filter_by(active=1).order_by(Service.name).all()
+  services = {}
+  for service in services_raw:
+    if service.ServiceGroup.name not in services:
+      services[service.ServiceGroup.name] = []
+    services[service.ServiceGroup.name].append(service)
+  if request.method == 'POST':
+    url = request.form.get('new-service-site-url', None)
+    service = request.form.get('new-service-site-service', None, type=int)
+    service_string = request.form.get('new-service-site-service-string', None)
+    status = request.form.get('new-service-site-status', None, type=int)
+    error = False
+    if not re.match(URL_REGEX, url):
+      flash(u'Bitte korrekte URL angeben.', 'error')
+    if not service and not service_string:
+      flash(u'Bitte Service wählen', 'error')
+      error = True
+    if status not in [1, 2]:
+      flash(u'Bitte Status wählen.', 'error')
+      error = True
+    if not error:
+      suggestion = Suggestion()
+      suggestion.created = datetime.datetime.now()
+      suggestion.updated = datetime.datetime.now()
+      suggestion.type = 'service-site-new'
+      suggestion_data = {
+        'url': url,
+        'status': 1 if status == 1 else 0,
+      }
+      if service:
+        suggestion_data['service'] = service
+      else:
+        suggestion_data['service-string'] = service_string
+      suggestion.suggestion = json.dumps(suggestion_data)
+      
+      db.session.add(suggestion)
+      db.session.commit()
+      flash(u'Seite erfolgreich hinzugefügt!', 'success')
+  return render_template('region.html', region=region, service_sites=service_sites, hosts=hosts, services=services)
 
+"""
+      if service:
+        service_id = Service.query.filter_by(id=service)
+        if not service_id.count():
+          abort(403)
+        service_id = service_id.first().id
+      else:
+        service = Service()
+        service.created = datetime.datetime.now()
+        service.updated = datetime.datetime.now()
+        service_site.active = 0
+        service.name = service_string
+        db.session.add(service)
+        db.session.commit()
+        service_id = service.id
+      service_site = ServiceSite()
+      service_site.created = datetime.datetime.now()
+      service_site.updated = datetime.datetime.now()
+      service_site.active = 0
+      service_site.url = url
+      service_site.quality_show = 1 if status == 1 else 0
+      service_site.host_id = util.save_host(url)
+      servive_site.service_id = service_id
+      service_site.region_id = region.id
+      
+      db.session.add(servive_site)
+      db.session.commit()
+"""
 
 @app.route("/host/<host>")
 def host(host):

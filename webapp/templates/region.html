@@ -73,34 +73,52 @@
     </div>
   </div>
   {% endfor %}
-  <!--div class="row-fluid">
+  <div class="row-fluid">
     <div class="col-md-12">
-      <p id="region-host-button"><a href="/region/{{ region.slug }}"><i class="fa fa-plus-circle"></i> Neuen Host vorschlagen</a></p>
-      <div id="region-host-form">
-        <form action="#" id="new-host-form" method="POST">
+      <h2>Dienst hinzufügen</h2>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="col-md-12">
+      <div id="region-service-site-form">
+        <form action="#" id="new-service-site-form" method="POST">
           <div class="container">
-            <div class="row-fluid form-group" id="new-host-formgroup">
-              <div class="col-md-6">
-                <label for="new-host-host">Neuer Host</label>
-                <input type="text" name="new-host-host" id="new-host-host" class="form-control" placeholder="meine-behoerde.de">
-                <p>Websites / URLs funktionieren auch.</p>
+            <div class="row-fluid form-group" id="new-service-site-formgroup">
+              <div class="col-md-5">
+                <label for="new-service-site-url">Website</label>
+                <input type="text" name="new-service-site-url" id="new-service-site-url" class="form-control" placeholder="https://meine-behoerde.de/mein-dienst.html">
               </div>
-              <div class="col-md-4">
-                <label for="new-host-type">Typus</label>
-                <select type="select" name="new-host-type" id="new-host-type" class="form-control">
-                  <option value="Primäre Website" selected="selected">Primäre Website</option>
+              <div class="col-md-3">
+                <label for="new-service-site-service">Dienst</label>
+                <select type="select" name="new-service-site-service" id="new-service-site-service" class="form-control">
+                  <option value="0">bitte wählen</option>
+                  {% for service_group in services %}
+                  <optgroup label="{{ service_group }}">
+                    {% for service in services[service_group] %}
+                      <option value="{{ service.id }}">{{ service.name }}</option>
+                    {% endfor %}
+                  </optgroup>
+                  {% endfor %}
                   <option value="-1">etwas anderes</option>
                 </select>
               </div>
               <div class="col-md-2">
-                <label for="new-host-submit">Neuer Host</label>
-                <input type="submit" name="new-host-submit" id="new-host-submit" class="form-control">
+                <label for="new-service-site-status">Status</label>
+                <select type="select" name="new-service-site-status" id="new-service-site-status" class="form-control">
+                  <option value="0">bitte wählen</option>
+                  <option value="1">online</option>
+                  <option value="2">offline</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="new-service-site-submit">Dienst hinzufügen</label>
+                <input type="submit" value="Dienst hinzufügen" name="new-service-site-submit" id="new-service-site-submit" class="form-control">
               </div>
             </div>
           </div>
         </form>
       </div>
     </div>
-  </div-->
+  </div>
 </div>
 {% endblock %}

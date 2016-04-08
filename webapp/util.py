@@ -580,7 +580,7 @@ def import_wikidata_sites_process(item, region):
     service_site.url = item['website']['value']
     
     # get / set host
-    service_site.host = save_host(get_host(service_site.url), region)
+    service_site.host_id = save_host(get_host(service_site.url), region)
     
     # save service_site
     db.session.add(service_site)

@@ -8,10 +8,6 @@
   color: #FFFFFF;
 }
 
-#region-host-form {
-  display: none;
-}
-
 .navbar-brand sup {
   font-style: italic;
 }
@@ -61,11 +57,12 @@
 #flash-messages li {
   list-style: none;
   text-align: center;
-  padding: 2px;
+  padding: 5px;
+  font-size: 20px;
 }
 
 #flash-messages i {
-  margin-left: 10px;
+  margin-right: 10px;
 }
 
 #flash-messages li.error {

@@ -71,6 +71,72 @@ class Region(db.Model):
     return '<Hoster %r>' % self.name
   
 
+class ServiceGroup(db.Model):
+  __tablename__ = 'service_group'
+  id = db.Column(db.Integer(), primary_key=True)
+  
+  created = db.Column(db.DateTime())
+  updated = db.Column(db.DateTime())
+  active = db.Column(db.Integer())
+  
+  name = db.Column(db.Text())
+  
+  services = db.relationship("Service", backref="ServiceGroup", lazy='dynamic')
+  
+  def __init__(self):
+    pass
+
+  def __repr__(self):
+    return '<ServiceGroup %r>' % self.name
+
+  
+class Service(db.Model):
+  __tablename__ = 'service'
+  id = db.Column(db.Integer(), primary_key=True)
+  
+  created = db.Column(db.DateTime())
+  updated = db.Column(db.DateTime())
+  active = db.Column(db.Integer())
+  
+  name = db.Column(db.Text())
+  fa_icon = db.Column(db.String(64))
+  descr_short = db.Column(db.Text())
+  descr = db.Column(db.Text())
+  make_ssl_test = db.Column(db.Integer())
+  
+  service_group_id = db.Column(db.Integer, db.ForeignKey('service_group.id'))
+  service_sites = db.relationship("ServiceSite", backref="Service", lazy='dynamic')
+  
+  def __init__(self):
+    pass
+
+  def __repr__(self):
+    return '<Service %r>' % self.name
+
+
+class ServiceSite(db.Model):
+  __tablename__ = 'service_site'
+  
+  id = db.Column(db.Integer(), primary_key=True)
+  created = db.Column(db.DateTime())
+  updated = db.Column(db.DateTime())
+  active = db.Column(db.Integer())
+  
+  url = db.Column(db.Text())
+  quality = db.Column(db.String(255)) # 'offline', 'mail', 'online'
+  quality_show = db.Column(db.Integer())
+  
+  host_id = db.Column(db.Integer, db.ForeignKey('host.id'))
+  region_id = db.Column(db.Integer, db.ForeignKey('region.id'))
+  service_id = db.Column(db.Integer, db.ForeignKey('service.id'))
+  
+  def __init__(self):
+    pass
+
+  def __repr__(self):
+    return '<ServiceSite %r>' % self.name
+  
+
 class Host(db.Model):
   __tablename__ = 'host'
   
@@ -147,69 +213,14 @@ class SslTest(db.Model):
   
   host_id = db.Column(db.Integer, db.ForeignKey('host.id'))
 
-class ServiceSite(db.Model):
-  __tablename__ = 'service_site'
-  
+
+class Suggestion(db.Model):
+  __tablename__ = 'suggestion'
   id = db.Column(db.Integer(), primary_key=True)
   created = db.Column(db.DateTime())
   updated = db.Column(db.DateTime())
-  active = db.Column(db.Integer())
-  
-  url = db.Column(db.Text())
-  quality = db.Column(db.String(255)) # 'offline', 'mail', 'online'
-  quality_show = db.Column(db.Integer())
-  
-  host_id = db.Column(db.Integer, db.ForeignKey('host.id'))
-  region_id = db.Column(db.Integer, db.ForeignKey('region.id'))
-  service_id = db.Column(db.Integer, db.ForeignKey('service.id'))
-  
-  def __init__(self):
-    pass
-
-  def __repr__(self):
-    return '<ServiceSite %r>' % self.name
-  
-  
-class Service(db.Model):
-  __tablename__ = 'service'
-  id = db.Column(db.Integer(), primary_key=True)
-  
-  created = db.Column(db.DateTime())
-  updated = db.Column(db.DateTime())
-  active = db.Column(db.Integer())
-  
-  name = db.Column(db.Text())
-  fa_icon = db.Column(db.String(64))
-  descr_short = db.Column(db.Text())
-  descr = db.Column(db.Text())
-  make_ssl_test = db.Column(db.Integer())
-  
-  service_group_id = db.Column(db.Integer, db.ForeignKey('service_group.id'))
-  service_sites = db.relationship("ServiceSite", backref="Service", lazy='dynamic')
-  
-  def __init__(self):
-    pass
-
-  def __repr__(self):
-    return '<Service %r>' % self.name
-
-class ServiceGroup(db.Model):
-  __tablename__ = 'service_group'
-  id = db.Column(db.Integer(), primary_key=True)
-  
-  created = db.Column(db.DateTime())
-  updated = db.Column(db.DateTime())
-  active = db.Column(db.Integer())
-  
-  name = db.Column(db.Text())
-  
-  services = db.relationship("Service", backref="ServiceGroup", lazy='dynamic')
-  
-  def __init__(self):
-    pass
-
-  def __repr__(self):
-    return '<ServiceGroup %r>' % self.name
+  type = db.Column(db.String(128))
+  suggestion = db.Column(db.Text())
 
 class Visualisation(db.Model):
   __tablename__ = 'visualisation'
