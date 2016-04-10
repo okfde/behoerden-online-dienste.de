@@ -171,6 +171,7 @@ class SslTest(db.Model):
   ip = db.Column(db.Text())
   
   port_443_available = db.Column(db.Integer())
+  port_25_available = db.Column(db.Integer())
   ssl_ok = db.Column(db.Integer())
   cert_matches = db.Column(db.Integer())
   

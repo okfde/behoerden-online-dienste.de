@@ -34,6 +34,13 @@ def import_osm():
 def import_basic_services():
   util.import_basic_services()
 
+@manager.command
+def extract_mailserver(start_with):
+  util.extract_mailserver(start_with)
+
+@manager.command
+def extract_mailserver_single():
+  util.extract_mailserver_single()
 
 @manager.command
 def es_import_regions():

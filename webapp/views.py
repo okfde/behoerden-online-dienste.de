@@ -193,7 +193,7 @@ def region(region_slug):
       
       db.session.add(suggestion)
       db.session.commit()
-      flash(u'Seite erfolgreich hinzugefügt!', 'success')
+      flash(u'Seite erfolgreich hinzugefügt und wartet nun auf Freischaltung der Admins!', 'success')
   return render_template('region.html', region=region, service_sites=service_sites, hosts=hosts, services=services)
 
 """

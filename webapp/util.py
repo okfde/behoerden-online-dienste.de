@@ -28,6 +28,7 @@ from lxml import etree
 from sqlalchemy import or_, desc, asc
 from models import *
 from webapp import app, db, es
+import dns.resolver
 
 
 slugify_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
@@ -66,15 +67,22 @@ def get_reverse_hostname(ip):
   except socket.herror:
     return False
 
-def get_sslyze(host):
+def get_sslyze(host, host_type):
   result = {
     'ssl_ok': 1
   }
   ciphers = []
-  data, error = subprocess.Popen(
-    ['python', app.config['SSLYZE_PATH'], '--xml_out=-', '--regular', '--hsts', '--timeout=20', '--sni=' + host,  host],
-    stdout=subprocess.PIPE,
-    stderr=subprocess.PIPE).communicate()
+  if host_type == '1':
+    data, error = subprocess.Popen(
+      ['python', app.config['SSLYZE_PATH'], '--xml_out=-', '--regular', '--hsts', '--timeout=20', '--sni=' + host,  host],
+      stdout=subprocess.PIPE,
+      stderr=subprocess.PIPE).communicate()
+  elif host_type == '2':
+    data, error = subprocess.Popen(
+      ['python', app.config['SSLYZE_PATH'], '--starttls=smtp', '--xml_out=-', '--regular', '--hsts', '--timeout=20', '--sni=' + host, '%s:25' % host],
+      stdout=subprocess.PIPE,
+      stderr=subprocess.PIPE).communicate()
+  print data
   if not data:
     return {'ssl_ok': 0}
   parser = etree.XMLParser(recover=True)
@@ -82,7 +90,7 @@ def get_sslyze(host):
   for leaf in tree:
     if leaf.tag == 'invalidTargets':
       if len(leaf):
-        if leaf[0].attrib['error'] == 'Could not complete an SSL handshake':
+        if leaf[0].attrib['error'] in ['Could not complete an SSL handshake', 'SMTP EHLO was rejected', 'SMTP STARTTLS not supported', 'Could not connect (timeout)']:
           return {'ssl_ok': 0}
     elif leaf.tag == 'results':
       for target in leaf:
@@ -245,11 +253,11 @@ def ssl_protocols(host, module, result, ciphers, current_protocol):
         result['%s_cipher_suites_preferred' % current_protocol].append(cipher_suite.attrib['name'])
   return (result, ciphers)
 
-def check_port_443_available(host):
+def check_port_available(host, port):
   try:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.settimeout(1)
-    s.connect((host, 443))
+    s.connect((host, port))
     s.close()
     return True
   except:
@@ -276,10 +284,10 @@ def ssl_check(start_with=None):
     ssl_check_single(host.id)
 
 
-def ssl_check_calidate():
+def ssl_check_validate():
   hosts = Host.query.filter_by(active=1).filter_by(ssl_result=1).all()
   for host in hosts:
-    ssl_test = SslTest.query.filter_by(host_id=host.id).order_by(desc(SslTest.created)).first()
+    ssl_test = SslTest.query.filter_by(host_id=host.id).order_by(desc(SslTest.created)).filter_by(type=1).first()
     if not ssl_test.port_443_available:
       if check_port_443_available(host.host):
         print "Updating %s" % host.host
@@ -292,7 +300,14 @@ def ssl_check_single(host_id):
 
   # Check URL
   result = {}
-  result['port_443_available'] = check_port_443_available(host.host)
+  result['port_available'] = False
+  
+  if host.type == '1':
+    result['port_443_available'] = check_port_available(host.host, 443)
+    result['port_available'] = result['port_443_available']
+  elif host.type == '2':
+    result['port_25_available'] = check_port_available(host.host, 25)
+    result['port_available'] = result['port_25_available']
 
   test_result = SslTest()
   test_result.created = datetime.datetime.now()
@@ -301,9 +316,12 @@ def ssl_check_single(host_id):
   test_result.ip = host.ip
   
   # if yes: check ssl avaiable
-  if result['port_443_available']:
-    test_result.port_443_available = result['port_443_available']
-    result.update(get_sslyze(host.host))
+  if result['port_available']:
+    if 'port_443_available' in result:
+      test_result.port_443_available = result['port_443_available']
+    elif 'port_25_available' in result:
+      test_result.port_25_available = result['port_25_available']
+    result.update(get_sslyze(host.host, host.type))
 
     if 'ssl_ok' in result:
       test_result.ssl_ok = result['ssl_ok']
@@ -375,15 +393,16 @@ def ssl_check_single(host_id):
             if 'tlsv1_2_cipher_suites_preferred' in result:
               test_result.tlsv1_2_cipher_suites_preferred = ', '.join(result['tlsv1_2_cipher_suites_preferred'])
             
-            # make request to check if there is an forward
-            try:
-              request = requests.get('http://%s' % host.host, verify=False)
-              if request.url[0:8] == 'https://':
-                test_result.ssl_forward = 1
-              else:
-                test_result.ssl_forward = 0
-            except (requests.exceptions.SSLError, requests.exceptions.ConnectionError, requests.exceptions.ReadTimeout):
-              print "CRITICAL SSL ERROR"
+            if 'port_443_available' in result:
+              # make request to check if there is an forward
+              try:
+                request = requests.get('http://%s' % host.host, verify=False)
+                if request.url[0:8] == 'https://':
+                  test_result.ssl_forward = 1
+                else:
+                  test_result.ssl_forward = 0
+              except (requests.exceptions.SSLError, requests.exceptions.ConnectionError, requests.exceptions.ReadTimeout):
+                print "CRITICAL SSL ERROR"
   db.session.add(test_result)
   db.session.commit()
   ssl_check_summary_single(host.id)
@@ -399,10 +418,10 @@ def ssl_check_summary():
 def ssl_check_summary_single(host_id):
   host = Host.query.filter_by(id=host_id).first()
   ssl_test = SslTest.query.filter_by(host_id=host.id).order_by(desc(SslTest.created)).first()
-
+  
   # 1 = nicht existent, 2 = rotminus, 3 = rot, 4 = gelb, 5 = grün, 6 = grünplus
   summary = 1
-  if ssl_test.port_443_available and ssl_test.ssl_ok and ssl_test.cert_matches:
+  if (ssl_test.port_443_available or ssl_test.port_25_available) and ssl_test.ssl_ok and ssl_test.cert_matches:
     summary = 6
     # bad ciphers
     if ssl_test.anon_suite_available and summary > 3:
@@ -447,13 +466,17 @@ def ssl_check_summary_single(host_id):
     #misc
     if not ssl_test.fallback_scsv_available and summary > 5:
       summary = 5
+    if not ssl_test.hsts_available and summary > 5:
+      summary = 5
     if not ssl_test.session_renegotiation_secure and summary > 3:
       summary = 3
     if ssl_test.heartbleed and summary > 2:
       summary = 2
     if ssl_test.sha1_cert and summary > 4:
       summary = 4
-
+    if ssl_test.ssl_forward and summary > 4:
+      summary = 4
+  
   host.ssl_result = summary
   db.session.add(host)
   db.session.commit()
@@ -824,6 +847,39 @@ def import_basic_services():
     db.session.add(service)
     db.session.commit()
   
+def extract_mailserver(start_with):
+  service_sites = ServiceSite.query.filter_by(active=1).filter_by(service_id=1).filter(ServiceSite.id > int(start_with)).all()
+  for service_site in service_sites:
+    extract_mailserver_single(service_site.region_id, service_site.url)
+  
+def extract_mailserver_single(region_id, url):
+  base_host = '.'.join(get_host(url).split('.')[-2:])
+  try:
+    mx_hosts = dns.resolver.query(base_host, 'MX')
+    print "Adding MX Record Hosts for %s" % base_host
+    for mx_host in mx_hosts:
+      mx_host_name = str(mx_host.exchange)
+      if mx_host_name[-1] == '.':
+        mx_host_name = mx_host_name[0:-1]
+      host = Host.query.filter_by(type=2).filter_by(host=mx_host_name)
+      if host.count():
+        host = host.first()
+      else:
+        host = Host()
+        host.created = datetime.datetime.now()
+        host.host = mx_host_name
+        host.type = 2
+      host.active = 1
+      host.updated = datetime.datetime.now()
+      host.ip = get_ip(host.host)
+      if host.ip:
+        host.reverse_hostname = get_reverse_hostname(host.ip)
+      host.regions.append(Region.query.filter_by(id=region_id).first())
+      db.session.add(host)
+      db.session.commit()
+  except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN, dns.resolver.NoNameservers):
+    print "WARNING: %s has no valid MX record!" % base_host
+
 
 
 def import_onlinecheck():
@@ -906,6 +962,7 @@ def save_host(hostname, region):
     host = Host()
     host.created = datetime.datetime.now()
     host.updated = datetime.datetime.now()
+    host.type = 1
     host.active = 1
     host.host = hostname
     host.ip = get_ip(hostname)
