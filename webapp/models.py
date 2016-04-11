@@ -191,17 +191,17 @@ class SslTest(db.Model):
   tlsv1_1_available = db.Column(db.Integer())
   tlsv1_2_available = db.Column(db.Integer())
   
-  sslv2_cipher_suites_accepted = db.Column(db.Text())
-  sslv3_cipher_suites_accepted = db.Column(db.Text())
-  tlsv1_cipher_suites_accepted = db.Column(db.Text())
-  tlsv1_1_cipher_suites_accepted = db.Column(db.Text())
-  tlsv1_2_cipher_suites_accepted = db.Column(db.Text())
+  sslv2_cipher_accepted = db.Column(db.Text())
+  sslv3_cipher_accepted = db.Column(db.Text())
+  tlsv1_cipher_accepted = db.Column(db.Text())
+  tlsv1_1_cipher_accepted = db.Column(db.Text())
+  tlsv1_2_cipher_accepted = db.Column(db.Text())
   
-  sslv2_cipher_suites_preferred = db.Column(db.String(255))
-  sslv3_cipher_suites_preferred = db.Column(db.String(255))
-  tlsv1_cipher_suites_preferred = db.Column(db.String(255))
-  tlsv1_1_cipher_suites_preferred = db.Column(db.String(255))
-  tlsv1_2_cipher_suites_preferred = db.Column(db.String(255))
+  sslv2_cipher_preferred = db.Column(db.String(255))
+  sslv3_cipher_preferred = db.Column(db.String(255))
+  tlsv1_cipher_preferred = db.Column(db.String(255))
+  tlsv1_1_cipher_preferred = db.Column(db.String(255))
+  tlsv1_2_cipher_preferred = db.Column(db.String(255))
   
   hsts_available = db.Column(db.Integer())
   session_renegotiation_secure = db.Column(db.Integer())
@@ -211,6 +211,7 @@ class SslTest(db.Model):
   sha1_cert = db.Column(db.Integer())
   ocsp_stapling = db.Column(db.Integer())
   ssl_forward = db.Column(db.Integer())
+  compression = db.Column(db.Integer())
   
   host_id = db.Column(db.Integer, db.ForeignKey('host.id'))
 
