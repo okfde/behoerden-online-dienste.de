@@ -170,6 +170,7 @@ def region(region_slug):
     error = False
     if not re.match(URL_REGEX, url):
       flash(u'Bitte korrekte URL angeben.', 'error')
+      error = True
     if not service and not service_string:
       flash(u'Bitte Service wählen', 'error')
       error = True
