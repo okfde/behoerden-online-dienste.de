@@ -521,7 +521,7 @@ def ssl_check_single(host_id):
           if 'port_443_available' in result:
             # make request to check if there is an forward
             try:
-              request = requests.get('http://%s' % host.host, verify=False)
+              request = requests.get('http://%s' % host.host, verify=False, timeout=30)
               if request.url[0:8] == 'https://':
                 test_result.ssl_forward = 1
               else:
