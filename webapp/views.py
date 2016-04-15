@@ -155,7 +155,8 @@ def region(region_slug):
   service_sites = {1: [], 2: [], 3: []}
   for service_site in service_sites_raw:
     service_sites[service_site.Service.service_group_id].append(service_site)
-  hosts = Host.query.filter_by(active=1).join(ServiceSite).filter_by(region_id=region.id).filter_by(active=1).join(Service).filter_by(make_ssl_test=1).all()
+  hosts_services = Host.query.filter_by(active=1).join(ServiceSite).filter_by(region_id=region.id).filter_by(active=1).join(Service).filter_by(make_ssl_test=1).all()
+  hosts_mail = Host.query.filter_by(active=1).filter(Host.regions.any(id=region.id)).all()
   services_raw = Service.query.filter_by(active=1).order_by(Service.name).all()
   services = {}
   for service in services_raw:
@@ -195,7 +196,7 @@ def region(region_slug):
       db.session.add(suggestion)
       db.session.commit()
       flash(u'Seite erfolgreich hinzugefügt und wartet nun auf Freischaltung der Admins!', 'success')
-  return render_template('region.html', region=region, service_sites=service_sites, hosts=hosts, services=services)
+  return render_template('region.html', region=region, service_sites=service_sites, hosts_services=hosts_services, hosts_mail=hosts_mail, services=services)
 
 """
       if service:

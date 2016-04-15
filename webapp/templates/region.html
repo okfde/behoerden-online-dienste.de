@@ -62,7 +62,7 @@
       <p>Über Online-Dienste werden oft sensible Daten übertragen, so dass eine gute Verschlüsselung wichtig ist. <a href="/info/encryption">Eine Erklärung des Bewertung-Systems finden Sie in den FAQ.</a></p>
     </div>
   </div>
-  {% for host in hosts %}
+  {% for host in hosts_services %}
   <div class="row-fluid">
     <div class="col-sm-2 col-rating col-rating-ssl-{% if host.ssl_result %}{{ host.ssl_result }}{% else %}0{% endif %}">
       <i class="fa fa-{% if host.ssl_result == 1 %}unlock{% elif host.ssl_result %}lock{% else %}question-circle{% endif %}"></i>{% if host.ssl_result == 6 %}<i class="fa fa-plus"></i>{% elif host.ssl_result == 2 %}<i class="fa fa-minus"></i>{% endif %}
@@ -70,6 +70,17 @@
     <div>
       <h3><a href="/host/{{ host.host }}">{{ host.host }}</a></h3>
       <p>Dienste auf diesem Host: {% for service_site in host.service_sites %}{% if service_site.region_id == region.id %}<a href="{{ service_site.url }}" target="_blank">{{ service_site.Service.name}}</a>{% if not loop.last %}, {% endif %}{% endif %}{% endfor %}</p>
+    </div>
+  </div>
+  {% endfor %}
+  {% for host in hosts_mail %}
+  <div class="row-fluid">
+    <div class="col-sm-2 col-rating col-rating-ssl-{% if host.ssl_result %}{{ host.ssl_result }}{% else %}0{% endif %}">
+      <i class="fa fa-{% if host.ssl_result == 1 %}unlock{% elif host.ssl_result %}lock{% else %}question-circle{% endif %}"></i>{% if host.ssl_result == 6 %}<i class="fa fa-plus"></i>{% elif host.ssl_result == 2 %}<i class="fa fa-minus"></i>{% endif %}
+    </div>
+    <div>
+      <h3><a href="/host/{{ host.host }}">{{ host.host }}</a></h3>
+      <p>Dienste auf diesem Host: Mailserver</p>
     </div>
   </div>
   {% endfor %}
