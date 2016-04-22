@@ -91,7 +91,7 @@
           <option value="16">Thüringen</option>
         </select>
       </h2>
-      <p>Die meisten Seiten bieten gar keine Absicherung der Kommunikation an.</p>
+      <p>Der überwiegende Teil der Mailserver bieten keine Absicherung der Kommunikation an.</p>
     </div>
   </div>
   <div class="row-fluid">
@@ -120,7 +120,7 @@
           <option value="16">Thüringen</option>
         </select>
       </h2>
-      <p>Die Qualität ist sehr durchwachsen.</p>
+      <p>Die Qualität ist durchwachsen.</p>
     </div>
   </div>
 </div>
@@ -193,7 +193,7 @@
     
     // quality web
     var encryption_quality_web_data = JSON.parse(JSON.stringify(encryption_quality_layout));
-    encryption_quality_web_data['datasets'][0]['data'] = encryption_yes_no_mail[$('#encryption_quality_web_select').val()];
+    encryption_quality_web_data['datasets'][0]['data'] = encryption_quality_web[$('#encryption_quality_web_select').val()];
     var encryption_quality_web_current = new Chart(document.getElementById("encryption_quality_web_canvas").getContext("2d"), { type: 'doughnut', data: encryption_quality_web_data });
     $('#encryption_quality_web_select').change(function() {
       encryption_quality_web_current.data.datasets[0].data = encryption_quality_web[$('#encryption_quality_web_select').val()];
@@ -202,7 +202,7 @@
     
     // quality mail
     var encryption_quality_mail_data = JSON.parse(JSON.stringify(encryption_quality_layout));
-    encryption_quality_mail_data['datasets'][0]['data'] = encryption_yes_no_mail[$('#encryption_quality_web_select').val()];
+    encryption_quality_mail_data['datasets'][0]['data'] = encryption_quality_mail[$('#encryption_quality_mail_select').val()];
     var encryption_quality_mail_current = new Chart(document.getElementById("encryption_quality_mail_canvas").getContext("2d"), { type: 'doughnut', data: encryption_quality_mail_data });
     $('#encryption_quality_mail_select').change(function() {
       encryption_quality_mail_current.data.datasets[0].data = encryption_quality_mail[$('#encryption_quality_mail_select').val()];
