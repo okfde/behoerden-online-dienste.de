@@ -1,4 +1,19 @@
 $(document).ready(function() {
+  // charts
+  $('.chart-square').each(function(index) {
+    $(this).attr({
+      'width': $(this).width(),
+      'height': $(this).width()
+    });
+  });
+  $( window ).resize(function() {
+    $('.chart-square').each(function(index) {
+      $(this).attr({
+        'width': $(this).width(),
+        'height': $(this).width()
+      });
+    });
+  });
   Chart.defaults.global.legend.display = false;
   
   // region
