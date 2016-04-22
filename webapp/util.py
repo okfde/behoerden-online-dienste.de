@@ -1199,6 +1199,20 @@ def import_osm():
   "http://overpass-api.de/api/interpreter?data=[out:json];(rel(62644);>;);out;"
   pass
 
+
+def get_visualisation(identifier):
+  visualisation = Visualisation.query.filter_by(identifier=identifier)
+  if visualisation.count():
+    visualisation = visualisation.first()
+  else:
+    visualisation = Visualisation()
+    visualisation.created = datetime.datetime.now()
+    visualisation.active = 1
+    visualisation.identifier = identifier
+  visualisation.updated = datetime.datetime.now()
+  return visualisation
+
+
 def generate_visualisations():
   ##############################
   ### eGovernment-Service-Count ###
@@ -1289,15 +1303,7 @@ def generate_visualisations():
   ##############################
   ### Data-Service-Count ###
   ##############################
-  visualisation = Visualisation.query.filter_by(identifier='data_service_count')
-  if visualisation.count():
-    visualisation = visualisation.first()
-  else:
-    visualisation = Visualisation()
-    visualisation.created = datetime.datetime.now()
-    visualisation.active = 1
-    visualisation.identifier = 'data_service_count'
-  visualisation.updated = datetime.datetime.now()
+  visualisation = get_visualisation('data_service_count')
   service_list = []
   services = Service.query.filter_by(active=1).filter_by(service_group_id=3).order_by(Service.name).all()
   for service in services:
@@ -1334,96 +1340,120 @@ def generate_visualisations():
   ########################
   ### Encryption Total ###
   ########################
-  visualisation = Visualisation.query.filter_by(identifier='encryption_yes_no')
-  if visualisation.count():
-    visualisation = visualisation.first()
-  else:
-    visualisation = Visualisation()
-    visualisation.created = datetime.datetime.now()
-    visualisation.active = 1
-    visualisation.identifier = 'encryption_yes_no'
-  visualisation.updated = datetime.datetime.now()
+  visualisation = get_visualisation('encryption_yes_no')
+  result_raw = [0, 0]
+  
+  visualisation_type = {}
+  visualisation_type_deref = {
+    1: 'web',
+    2: 'mail'
+  }
+  
+  visualisation_type = {}
+  visualisation_region = {}
+  visualisation_type_region = {}
+  result_raw_type = {}
+  result_raw_region = {}
+  result_raw_type_region = {}
+  
+  for i in range(1, 17):
+    visualisation_region[i] = get_visualisation('encryption_yes_no_%s' % i)
+    result_raw_region[i] = [0, 0]
+  
+  for i in range (1, 3):
+    visualisation_type[i] = get_visualisation('encryption_yes_no_%s' % visualisation_type_deref[i])
+    result_raw_type[i] = [0, 0]
+    visualisation_type_region[i] = {}
+    result_raw_type_region[i] = {}
+    for j in range(1, 17):
+      visualisation_type_region[i][j] = get_visualisation('encryption_yes_no_%s_%s' % (visualisation_type_deref[i], j))
+      result_raw_type_region[i][j] = [0, 0]
+  
   hosts = Host.query.filter(Host.ssl_result >= 1).all()
-  result_raw = {
-    1: 0,
-    2: 0
-  }
   for host in hosts:
-    result_raw[2 if host.ssl_result > 1 else 1] += 1
-  result_data = {
-    'labels': [
-      u'Unverschlüsselt',
-      u'Verschlüsselt'
-    ],
-    'datasets': [
-      {
-        'data': [
-          result_raw[1],
-          result_raw[2]
-        ],
-        'backgroundColor': [
-          '#d9534f',
-          '#5cb85c'
-        ]
-      }
-    ]
-  }
-  visualisation.data = json.dumps(result_data)
+    result_raw[1 if host.ssl_result > 1 else 0] += 1
+    result_raw_type[int(host.type)][1 if host.ssl_result > 1 else 0] += 1
+    for region in host.regions:
+      result_raw_region[int(region.rgs[0:2])][1 if host.ssl_result > 1 else 0] += 1
+      result_raw_type_region[int(host.type)][int(region.rgs[0:2])][1 if host.ssl_result > 1 else 0] += 1
+  
+  visualisation.data = json.dumps(result_raw)
   db.session.add(visualisation)
   db.session.commit()
-
+  
+  for i in range(1, 17):
+    visualisation_region[i].data = json.dumps(result_raw_region[i])
+    db.session.add(visualisation_region[i])
+    db.session.commit()
+  
+  for i in range(1, 3):
+    visualisation_type[i].data = json.dumps(result_raw_type[i])
+    db.session.add(visualisation_type[i])
+    db.session.commit()
+    for j in range(1, 17):
+      visualisation_type_region[i][j].data = json.dumps(result_raw_type_region[i][j])
+      db.session.add(visualisation_type_region[i][j])
+      db.session.commit()
+  
+  
+  
   ##########################
   ### Encryption Quality ###
   ##########################
-  visualisation = Visualisation.query.filter_by(identifier='encryption_quality')
-  if visualisation.count():
-    visualisation = visualisation.first()
-  else:
-    visualisation = Visualisation()
-    visualisation.created = datetime.datetime.now()
-    visualisation.active = 1
-    visualisation.identifier = 'encryption_quality'
-  visualisation.updated = datetime.datetime.now()
+  visualisation = get_visualisation('encryption_quality')
+  result_raw = [0, 0, 0, 0, 0]
+  
+  visualisation_type = {}
+  visualisation_type_deref = {
+    1: 'web',
+    2: 'mail'
+  }
+  
+  visualisation_type = {}
+  visualisation_region = {}
+  visualisation_type_region = {}
+  result_raw_type = {}
+  result_raw_region = {}
+  result_raw_type_region = {}
+  
+  for i in range(1, 17):
+    visualisation_region[i] = get_visualisation('encryption_quality_%s' % i)
+    result_raw_region[i] = [0, 0, 0, 0, 0]
+  
+  for i in range (1, 3):
+    visualisation_type[i] = get_visualisation('encryption_quality_%s' % visualisation_type_deref[i])
+    result_raw_type[i] = [0, 0, 0, 0, 0]
+    visualisation_type_region[i] = {}
+    result_raw_type_region[i] = {}
+    for j in range(1, 17):
+      visualisation_type_region[i][j] = get_visualisation('encryption_quality_%s_%s' % (visualisation_type_deref[i], j))
+      result_raw_type_region[i][j] = [0, 0, 0, 0, 0]
+  
   hosts = Host.query.filter(Host.ssl_result >= 2).all()
-  result_raw = {
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 0,
-    5: 0
-  }
   for host in hosts:
-    result_raw[host.ssl_result - 1] += 1
-  result_data = {
-    'labels': [
-      u'sehr unsicher',
-      u'unsicher',
-      u'Verbesserungswürdig',
-      u'gute',
-      u'ausgezeichnet'
-    ],
-    'datasets': [
-      {
-        'data': [
-          result_raw[1],
-          result_raw[2],
-          result_raw[3],
-          result_raw[4],
-          result_raw[5]
-        ],
-        'backgroundColor': [
-          '#d9534f',
-          '#d9534f',
-          '#f0ad4e',
-          '#5cb85c',
-          '#5cb85c'
-        ]
-      }
-    ]
-  }
-  visualisation.data = json.dumps(result_data)
+    result_raw[host.ssl_result - 2] += 1
+    result_raw_type[int(host.type)][host.ssl_result - 2] += 1
+    for region in host.regions:
+      result_raw_region[int(region.rgs[0:2])][host.ssl_result - 2] += 1
+      result_raw_type_region[int(host.type)][int(region.rgs[0:2])][host.ssl_result - 2] += 1
+  
+  visualisation.data = json.dumps(result_raw)
   db.session.add(visualisation)
   db.session.commit()
+  
+  for i in range(1, 17):
+    visualisation_region[i].data = json.dumps(result_raw_region[i])
+    db.session.add(visualisation_region[i])
+    db.session.commit()
+  
+  for i in range(1, 3):
+    visualisation_type[i].data = json.dumps(result_raw_type[i])
+    db.session.add(visualisation_type[i])
+    db.session.commit()
+    for j in range(1, 17):
+      visualisation_type_region[i][j].data = json.dumps(result_raw_type_region[i][j])
+      db.session.add(visualisation_type_region[i][j])
+      db.session.commit()
   
   
 # Creates a slug
