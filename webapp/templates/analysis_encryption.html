@@ -170,7 +170,7 @@
   var encryption_yes_no_web = [ {{ visualisations['encryption_yes_no_web']['data']|safe }}, {% for i in range(1, 17) %}{{ visualisations['encryption_yes_no_web_%s' % i]['data']|safe }}{% if not loop.last %}, {% endif %}{% endfor %} ]
   var encryption_yes_no_mail = [ {{ visualisations['encryption_yes_no_mail']['data']|safe }}, {% for i in range(1, 17) %}{{ visualisations['encryption_yes_no_mail_%s' % i]['data']|safe }}{% if not loop.last %}, {% endif %}{% endfor %} ]
   var encryption_quality_web = [ {{ visualisations['encryption_quality_web']['data']|safe }}, {% for i in range(1, 17) %}{{ visualisations['encryption_quality_web_%s' % i]['data']|safe }}{% if not loop.last %}, {% endif %}{% endfor %} ]
-  var encryption_quality_mail = [ {{ visualisations['encryption_quality_mail']['data']|safe }}, {% for i in range(1, 17) %}{{ visualisations['encryption_yes_no_mail_%s' % i]['data']|safe }}{% if not loop.last %}, {% endif %}{% endfor %} ]
+  var encryption_quality_mail = [ {{ visualisations['encryption_quality_mail']['data']|safe }}, {% for i in range(1, 17) %}{{ visualisations['encryption_quality_mail_%s' % i]['data']|safe }}{% if not loop.last %}, {% endif %}{% endfor %} ]
   
   $(document).ready(function() {
     // yes no web
