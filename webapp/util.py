@@ -1371,9 +1371,11 @@ def generate_visualisations():
   
   hosts = Host.query.filter(Host.ssl_result >= 1).all()
   for host in hosts:
-    result_raw[1 if host.ssl_result > 1 else 0] += 1
-    result_raw_type[int(host.type)][1 if host.ssl_result > 1 else 0] += 1
     for region in host.regions:
+      # Count host multible times
+      result_raw[1 if host.ssl_result > 1 else 0] += 1
+      result_raw_type[int(host.type)][1 if host.ssl_result > 1 else 0] += 1
+      # Region related
       result_raw_region[int(region.rgs[0:2])][1 if host.ssl_result > 1 else 0] += 1
       result_raw_type_region[int(host.type)][int(region.rgs[0:2])][1 if host.ssl_result > 1 else 0] += 1
   
@@ -1391,6 +1393,9 @@ def generate_visualisations():
     db.session.add(visualisation_type[i])
     db.session.commit()
     for j in range(1, 17):
+      visualisation_region[i].data = json.dumps(result_raw_region[i])
+      db.session.add(visualisation_region[i])
+      db.session.commit()
       visualisation_type_region[i][j].data = json.dumps(result_raw_type_region[i][j])
       db.session.add(visualisation_type_region[i][j])
       db.session.commit()
@@ -1431,9 +1436,11 @@ def generate_visualisations():
   
   hosts = Host.query.filter(Host.ssl_result >= 2).all()
   for host in hosts:
-    result_raw[host.ssl_result - 2] += 1
-    result_raw_type[int(host.type)][host.ssl_result - 2] += 1
     for region in host.regions:
+      # Count host multible times
+      result_raw[host.ssl_result - 2] += 1
+      result_raw_type[int(host.type)][host.ssl_result - 2] += 1
+      # Region related
       result_raw_region[int(region.rgs[0:2])][host.ssl_result - 2] += 1
       result_raw_type_region[int(host.type)][int(region.rgs[0:2])][host.ssl_result - 2] += 1
   
