@@ -115,8 +115,14 @@
   </div>
   <div class="row-fluid">
     <div class="col-md-12">
-      <h2 id="ssl3">Warum sollte SSL Version 3 abgeschaltet werden?</h2>
+      <h2 id="sslv3">Warum sollte SSL Version 3 abgeschaltet werden?</h2>
       <p>Von SSL v3 wurde schon länger abgeraten. Seit <a href="http://www.heise.de/security/meldung/Poodle-Experten-warnen-vor-Angriff-auf-Internet-Verschluesselung-2424122.html">im Oktober 2014 die POODLE-Attacke veröffentlicht</a> wurde, kann man SSL 3 auch gleich auf die Verschlüsselung verzichten - es macht einfach keinen Unterschied. Wenn man modernere Verfahren (TLS 1.0 bis TLS 1.2) unterstützt und mit TLS_FALLBACK_SCSV eine Dowgrade-Attacke unterbindet, ist ein aktiviertes SSL 3 weniger problematisch, da der Browser dann nur die moderneren Verfahren nutzt. Aber auch mit TLS_FALLBACK_SCSV ist ein aktiviertes SSL 3 ein Sicherheitsrisiko, dem man sich ohne Not aussetzt.</p>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="col-md-12">
+      <h2 id="sslv2">SSLv2</h2>
+      <p></p>
     </div>
   </div>
   <div class="row-fluid">
@@ -151,8 +157,26 @@
   </div>
   <div class="row-fluid">
     <div class="col-md-12">
-      <h2 id="hsts">Was ist TLS_FALLBACK_SCSV und warum sollte es eingesetzt werden?</h2>
+      <h2 id="scsv">Was ist TLS_FALLBACK_SCSV und warum sollte es eingesetzt werden?</h2>
       <p>Mit dem TLS_FALLBACK_SCSV-Wert signalisiert der Browser einem Webserver, dass der Verbindungsaufbau über einen Fallback-Mechanismus ausgeführt wird, der potentiell von einem Angreifer provoziert worden sein könnte. Der Server erfährt auf diese Weise, dass der Browser ein besseres (sichereres) Verfahren nutzen könnte und verhindert dann den Verbindungsaufbau, wenn er TLS_FALLBACK_SCSV unterstützt. Auf diese Weise kann beispielsweise der POODLE-Angriff unterbunden werden.</p>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="col-md-12">
+      <h2 id="md5">MD5</h2>
+      <p>...</p>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="col-md-12">
+      <h2 id="ccs">CCS-Injection</h2>
+      <p></p>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="col-md-12">
+      <h2 id="ccs">TLS Kompression</h2>
+      <p></p>
     </div>
   </div>
   <div class="row-fluid">

@@ -259,6 +259,17 @@
     </div>
   </div>
   {% endif %}
+  {% if not ssl_test.heartbleed %}
+  <div class="row-fluid">
+    <div class="col-sm-2 col-rating">
+      <span class="fa fa-minus-circle"></span>
+    </div>
+    <div class="col-sm-10">
+      <h2>{{ ssl_test.Host.host }} ist anfällig gegenüber der Heartbleed-Sicherheitslücke.</h2>
+      <p>Dieser SSL-Supergau ermöglicht es Angreifern, an den Private Key zu gelangen. <a href="/info/encryption#heartbleed">Weitere Informationen.</a></p>
+    </div>
+  </div>
+  {% endif %}
   {% endif %}
 </div>
 {% endblock %}
