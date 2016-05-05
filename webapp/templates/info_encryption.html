@@ -36,7 +36,7 @@
     </div>
     <div>
       <h3>Sicherheitsproblem bei der Datenübertragung</h3>
-      <p>Der Host verwendet einen deutlich veralteten Absicherungsmechanismus, so dass es recht leicht ist, diesen zu knacken. Dies bedeutet entweder einen DH-Key von unter 1024 Bit, aktives SSLv3 ohne Fallback SCSV, eine aktive Anon-Cipher, unsichere TLS-Renegotiation oder präferierte RC4- oder MD5-Cipher.</p>
+      <p>Der Host verwendet einen deutlich veralteten Absicherungsmechanismus, so dass es recht einfach ist, diesen zu knacken. Dies bedeutet entweder einen DH-Key von unter 1024 Bit, aktives SSLv3 ohne Fallback SCSV, eine aktive Anon-Cipher, unsichere TLS-Renegotiation oder präferierte RC4- oder MD5-Cipher.</p>
     </div>
   </div>
   <div class="row-fluid">
@@ -164,19 +164,19 @@
   <div class="row-fluid">
     <div class="col-md-12">
       <h2 id="md5">MD5</h2>
-      <p>...</p>
+      <p>MD5 (Message-Digest Algorithm 5) ist eine von Ronald L. Rivest entwickelte und äußerst weit verbreitete kryptographische Hashfunktion, die 128-Bit-Hashwerte erzeugt. Eine häufige Anwendung ist die Überprüfung von Downloads anhand ihres MD5-Fingerabdrucks. Die Funktion wird als gebrochen angesehen, da es u. a. mit geringem Aufwand möglich ist, Nachrichten zu erzeugen, die sich zwar unterscheiden, jedoch den gleichen Hashwert aufweisen. Keinesfalls sollte MD5 heute noch verwendet werden.</p>
     </div>
   </div>
   <div class="row-fluid">
     <div class="col-md-12">
       <h2 id="ccs">CCS-Injection</h2>
-      <p></p>
+      <p>Diese 2014 entdeckte OpenSSL-Schwachstelle erlaubt es einem Angreifer, der aktiv in die Kommunikation eingreifen kann, Server und Client zur Verwendung schwacher Schlüssel zu zwingen, um dann die Verbindung ablauschen oder Datenpakete verändern zu können. Der Fehler betraf nicht das TLS-Protokoll selbst sondern seine Implementierung in OpenSSL. Ein Update auf Versionen ab 1.0.1h schließt die Sicherheitslücke.</p>
     </div>
   </div>
   <div class="row-fluid">
     <div class="col-md-12">
-      <h2 id="ccs">TLS Kompression</h2>
-      <p></p>
+      <h2 id="ccs">TLS-Kompression</h2>
+      <p>Im Jahre 2012 wurde eine Schwachstelle bei der Verwendung von Datenkompression im TLS-Protokoll entdeckt, die es einem aktiven Angreifer ermöglicht, über die Manipulation der Kommunikation mit dem Browser und die Auswertung von Längen verschlüsselter Datenpakete Rückschlüsse auf zuvor vereinbarte geheime Schlüssel zu ziehen. Im Erfolgsfall kann der Angreifer dann die Sitzung übernehmen. Durch Deaktivierung der unsicheren Kompressionsmechanismen im Server oder im Browser wird der Angriff verhindert.</p>
     </div>
   </div>
   <div class="row-fluid">
