@@ -599,7 +599,7 @@ def ssl_check_summary_single(host_id):
       summary = 2
     if ssl_test.sha1_cert and summary > 4:
       summary = 4
-    if ssl_test.ssl_forward and summary > 4:
+    if not ssl_test.ssl_forward and summary > 4:
       summary = 4
   
   host.ssl_result = summary
