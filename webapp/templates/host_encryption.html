@@ -34,8 +34,7 @@
   </div>
   {% endif %}
   {% if ssl_test.cert_matches %}
-  {% if ssl_test.Host.type == 1 %}
-  {% if ssl_test.ssl_forward %}
+  {% if ssl_test.ssl_forward == 1 %}
   <div class="row-fluid">
     <div class="col-sm-2 col-rating">
       <span class="fa fa-plus-circle"></span>
@@ -44,7 +43,7 @@
       <h2>{{ ssl_test.Host.host }} leitet auf die SSL-Seite weiter.</h2>
       <p>Das ist gut. <a href="/info/encryption#hsts">Weitere Informationen.</a></p>
     </div>
-  </div>{% else %}
+  </div>{% elif ssl_test.ssl_forward == 0 %}
   <div class="row-fluid">
     <div class="col-sm-2 col-rating">
       <span class="fa fa-minus-circle"></span>
@@ -54,7 +53,6 @@
       <p>Um sicherzustellen, dass Nutzer auch die verschlüsselte Seite nutzen, ist eine 301er-Weiterleitung von http:// Requests auf https:// empfehlenswert <a href="/info/encryption#forward">Weitere Informationen.</a></p>
     </div>
   </div>
-  {% endif %}
   {% endif %}
   {% if ssl_test.sha1_cert %}
   <div class="row-fluid">
@@ -141,7 +139,7 @@
   </div>
   {% endif %}
   {% if ssl_test.pfs_available and (ssl_test.dhe_key or ssl_test.ecdhe_key) %}
-  {% if ssl_test.dhe_key >= 2048 and ssl_test.ecdhe_key >= 256 %}
+  {% if (ssl_test.dhe_key >= 2048 or ssl_test.dhe_key == None) and (ssl_test.ecdhe_key >= 256 or ssl_test.ecdhe_key == None) %}
   <div class="row-fluid">
     <div class="col-sm-2 col-rating">
       <span class="fa fa-plus-circle"></span>
