@@ -580,12 +580,12 @@ def ssl_check_summary_single(host_id):
     if not ssl_test.pfs_available and summary > 4:
       summary = 4
     if ssl_test.dhe_key:
-      if ssl_test.dhe_key < 2048 and summary > 4:
+      if ssl_test.dhe_key < 2048 and ssl_test.dhe_key != None and summary > 4:
         summary = 4
       if ssl_test.dhe_key < 1024 and summary > 3:
         summary = 3
     if ssl_test.ecdhe_key:
-      if ssl_test.ecdhe_key < 256 and summary > 4:
+      if ssl_test.ecdhe_key < 256 and ssl_test.ecdhe_key != None and summary > 4:
         summary = 4
     
     #misc
