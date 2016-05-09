@@ -82,6 +82,9 @@
 
 
 /* INDEX */
+#fsr-title {
+  margin-top: 0;
+}
 
 #fsrt {
   position: relative;

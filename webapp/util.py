@@ -1406,7 +1406,7 @@ def generate_visualisations():
       result_raw_region[int(region.rgs[0:2])][1 if host.ssl_result > 1 else 0] += 1
       result_raw_type_region[int(host.type)][int(region.rgs[0:2])][1 if host.ssl_result > 1 else 0] += 1
     for service_site in host.service_sites:
-      if service_site.id == 1:
+      if service_site.service_id == 1:
         result_raw_website[1 if host.ssl_result > 1 else 0] += 1
         result_raw_website_region[int(region.rgs[0:2])][1 if host.ssl_result > 1 else 0] += 1
   
@@ -1445,7 +1445,7 @@ def generate_visualisations():
   visualisation = get_visualisation('encryption_quality')
   visualisation_website = get_visualisation('encryption_quality_website')
   result_raw = [0, 0, 0, 0, 0]
-  result_raw_Website = [0, 0, 0, 0, 0]
+  result_raw_website = [0, 0, 0, 0, 0]
   
   visualisation_type = {}
   visualisation_type_deref = {
@@ -1487,7 +1487,7 @@ def generate_visualisations():
       result_raw_region[int(region.rgs[0:2])][host.ssl_result - 2] += 1
       result_raw_type_region[int(host.type)][int(region.rgs[0:2])][host.ssl_result - 2] += 1
     for service_site in host.service_sites:
-      if service_site.id == 1:
+      if service_site.service_id == 1:
         result_raw_website[host.ssl_result - 2] += 1
         result_raw_website_region[int(region.rgs[0:2])][host.ssl_result - 2] += 1
     
