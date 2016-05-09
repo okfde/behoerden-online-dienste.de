@@ -1403,8 +1403,8 @@ def generate_visualisations():
       # Region related
       result_raw_region[int(region.rgs[0:2])][1 if host.ssl_result > 1 else 0] += 1
       result_raw_type_region[int(host.type)][int(region.rgs[0:2])][1 if host.ssl_result > 1 else 0] += 1
-    for service in host.services:
-      if service.id == 1:
+    for service_site in host.service_sites:
+      if service_site.id == 1:
         result_raw_website_region[int(region.rgs[0:2])][1 if host.ssl_result > 1 else 0] += 1
   
   visualisation.data = json.dumps(result_raw)
@@ -1478,8 +1478,8 @@ def generate_visualisations():
       # Region related
       result_raw_region[int(region.rgs[0:2])][host.ssl_result - 2] += 1
       result_raw_type_region[int(host.type)][int(region.rgs[0:2])][host.ssl_result - 2] += 1
-    for service in host.services:
-      if service.id == 1:
+    for service_site in host.service_sites:
+      if service_site.id == 1:
         result_raw_website_region[int(region.rgs[0:2])][host.ssl_result - 2] += 1
     
   
