@@ -1390,7 +1390,7 @@ def generate_visualisations():
       visualisation_type_region[i][j] = get_visualisation('encryption_yes_no_%s_%s' % (visualisation_type_deref[i], j))
       result_raw_type_region[i][j] = [0, 0]
   
-  hosts = Host.query.filter(Host.ssl_result >= 1).all()
+  hosts = Host.query.filter(Host.ssl_result >= 1).filter(Host.host != 'twitter.com').filter(Host.host != 'www.facebook.com').all()
   for host in hosts:
     for region in host.regions:
       # Count host multible times
@@ -1455,7 +1455,7 @@ def generate_visualisations():
       visualisation_type_region[i][j] = get_visualisation('encryption_quality_%s_%s' % (visualisation_type_deref[i], j))
       result_raw_type_region[i][j] = [0, 0, 0, 0, 0]
   
-  hosts = Host.query.filter(Host.ssl_result >= 2).all()
+  hosts = Host.query.filter(Host.ssl_result >= 2).filter(Host.host != 'twitter.com').filter(Host.host != 'www.facebook.com').all()
   for host in hosts:
     for region in host.regions:
       # Count host multible times
