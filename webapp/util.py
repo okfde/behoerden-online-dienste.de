@@ -607,6 +607,18 @@ def ssl_check_summary_single(host_id):
   db.session.commit()
 
 
+def update_export_cipher():
+  ssl_tests = SslTest.query.all()
+  for ssl_test in ssl_tests:
+    if 'EXP' in ssl_test.sslv2_cipher_accepted or 'EXP' in ssl_test.sslv3_cipher_accepted or 'EXP' in ssl_test.tlsv1_cipher_accepted:
+      ssl_test.export_cipher = 1
+    else:
+      ssl_test.export_cipher = 0
+    db.session.add(ssl_test)
+    db.session.commit()
+  
+
+
 def hoster_check():
   #do it with http://secynic.github.io/ipwhois/README.html
   pass

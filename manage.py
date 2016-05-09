@@ -67,6 +67,9 @@ def ssl_check_summary():
 def ssl_check_summary_single(host_id):
   util.ssl_check_summary_single(host_id)
 
+@manager.command
+def update_export_cipher():
+  util.update_export_cipher()
 
 @manager.command
 def generate_visualisations():

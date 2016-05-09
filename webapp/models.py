@@ -212,6 +212,7 @@ class SslTest(db.Model):
   ocsp_stapling = db.Column(db.Integer())
   ssl_forward = db.Column(db.Integer())
   compression = db.Column(db.Integer())
+  export_cipher = db.Column(db.Integer())
   
   host_id = db.Column(db.Integer, db.ForeignKey('host.id'))
 

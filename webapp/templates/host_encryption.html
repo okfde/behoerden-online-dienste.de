@@ -82,7 +82,7 @@
     </div>
     <div class="col-sm-10">
       <h2>{{ ssl_test.Host.host }} bietet eine RC4-Cipher an.</h2>
-      <p>Da RC4 zu leicht geknackt werden kann, sollte diese Verschlüsselung nicht mehr eingesetzt werden. <a href="/info/encryption#rc4">Weitere Informationen.</a></p>
+      <p>Da RC4 zu leicht geknackt werden kann, sollte diese Cipher nicht mehr eingesetzt werden. <a href="/info/encryption#rc4">Weitere Informationen.</a></p>
     </div>
   </div>
   {% else %}
@@ -103,7 +103,7 @@
     </div>
     <div class="col-sm-10">
       <h2>{{ ssl_test.Host.host }} bietet eine MD5-Cipher an.</h2>
-      <p>Da RC4 zu leicht geknackt werden kann, sollte diese Verschlüsselung nicht mehr eingesetzt werden. <a href="/info/encryption#md5">Weitere Informationen.</a></p>
+      <p>Da MD5 unerwünschte Kollisionen erzeugt kann, sollte dieser Hashalgorithmus nicht mehr eingesetzt werden. <a href="/info/encryption#md5">Weitere Informationen.</a></p>
     </div>
   </div>
   {% else %}
