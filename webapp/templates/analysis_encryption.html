@@ -243,6 +243,15 @@
       encryption_yes_no_web_current.update();
     });
     
+    // quality web
+    var encryption_quality_web_data = JSON.parse(JSON.stringify(encryption_quality_layout));
+    encryption_quality_web_data['datasets'][0]['data'] = encryption_quality_web[$('#encryption_quality_web_select').val()];
+    var encryption_quality_web_current = new Chart(document.getElementById("encryption_quality_web_canvas").getContext("2d"), { type: 'doughnut', data: encryption_quality_web_data });
+    $('#encryption_quality_web_select').change(function() {
+      encryption_quality_web_current.data.datasets[0].data = encryption_quality_web[$('#encryption_quality_web_select').val()];
+      encryption_quality_web_current.update();
+    });
+    
     // yes no website
     var encryption_yes_no_website_data = JSON.parse(JSON.stringify(encryption_yes_no_layout));
     encryption_yes_no_website_data['datasets'][0]['data'] = encryption_yes_no_website[$('#encryption_yes_no_website_select').val()];
@@ -250,6 +259,15 @@
     $('#encryption_yes_no_website_select').change(function() {
       encryption_yes_no_website_current.data.datasets[0].data = encryption_yes_no_website[$('#encryption_yes_no_website_select').val()];
       encryption_yes_no_website_current.update();
+    });
+    
+    // quality website
+    var encryption_quality_website_data = JSON.parse(JSON.stringify(encryption_quality_layout));
+    encryption_quality_website_data['datasets'][0]['data'] = encryption_quality_website[$('#encryption_quality_website_select').val()];
+    var encryption_quality_website_current = new Chart(document.getElementById("encryption_quality_website_canvas").getContext("2d"), { type: 'doughnut', data: encryption_quality_web_data });
+    $('#encryption_quality_website_select').change(function() {
+      encryption_quality_website_current.data.datasets[0].data = encryption_quality_website[$('#encryption_quality_website_select').val()];
+      encryption_quality_website_current.update();
     });
     
     // yes no mail
@@ -261,15 +279,6 @@
       encryption_yes_no_mail_current.update();
     });
     
-    // quality web
-    var encryption_quality_web_data = JSON.parse(JSON.stringify(encryption_quality_layout));
-    encryption_quality_web_data['datasets'][0]['data'] = encryption_quality_web[$('#encryption_quality_web_select').val()];
-    var encryption_quality_web_current = new Chart(document.getElementById("encryption_quality_web_canvas").getContext("2d"), { type: 'doughnut', data: encryption_quality_web_data });
-    $('#encryption_quality_web_select').change(function() {
-      encryption_quality_web_current.data.datasets[0].data = encryption_quality_web[$('#encryption_quality_web_select').val()];
-      encryption_quality_web_current.update();
-    });
-    
     // quality mail
     var encryption_quality_mail_data = JSON.parse(JSON.stringify(encryption_quality_layout));
     encryption_quality_mail_data['datasets'][0]['data'] = encryption_quality_mail[$('#encryption_quality_mail_select').val()];
@@ -279,14 +288,7 @@
       encryption_quality_mail_current.update();
     });
     
-    // quality web
-    var encryption_quality_website_data = JSON.parse(JSON.stringify(encryption_quality_layout));
-    encryption_quality_website_data['datasets'][0]['data'] = encryption_quality_website[$('#encryption_quality_website_select').val()];
-    var encryption_quality_website_current = new Chart(document.getElementById("encryption_quality_website_canvas").getContext("2d"), { type: 'doughnut', data: encryption_quality_web_data });
-    $('#encryption_quality_website_select').change(function() {
-      encryption_quality_website_current.data.datasets[0].data = encryption_quality_website[$('#encryption_quality_website_select').val()];
-      encryption_quality_website_current.update();
-    });
+  
   });
 </script>
 {% endblock %}
