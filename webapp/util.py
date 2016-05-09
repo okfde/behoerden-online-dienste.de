@@ -1382,7 +1382,7 @@ def generate_visualisations():
   for i in range(1, 17):
     visualisation_region[i] = get_visualisation('encryption_yes_no_%s' % i)
     result_raw_region[i] = [0, 0]
-    visualisation_website_region = get_visualisation('encryption_yes_no_website_%s' % i)
+    visualisation_website_region[i] = get_visualisation('encryption_yes_no_website_%s' % i)
     result_raw_website_region[i] = [0, 0]
   
   for i in range (1, 3):
@@ -1457,7 +1457,7 @@ def generate_visualisations():
   for i in range(1, 17):
     visualisation_region[i] = get_visualisation('encryption_quality_%s' % i)
     result_raw_region[i] = [0, 0, 0, 0, 0]
-    visualisation_website_region = get_visualisation('encryption_quality_website_%s' % i)
+    visualisation_website_region[i] = get_visualisation('encryption_quality_website_%s' % i)
     result_raw_website_region[i] = [0, 0, 0, 0, 0]
   
   for i in range (1, 3):
