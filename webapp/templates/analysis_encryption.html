@@ -255,7 +255,7 @@
     // yes no website
     var encryption_yes_no_website_data = JSON.parse(JSON.stringify(encryption_yes_no_layout));
     encryption_yes_no_website_data['datasets'][0]['data'] = encryption_yes_no_website[$('#encryption_yes_no_website_select').val()];
-    var encryption_yes_no_website_current = new Chart(document.getElementById("encryption_yes_no_website_canvas").getContext("2d"), { type: 'doughnut', data: encryption_yes_no_mail_data });
+    var encryption_yes_no_website_current = new Chart(document.getElementById("encryption_yes_no_website_canvas").getContext("2d"), { type: 'doughnut', data: encryption_yes_no_website_data });
     $('#encryption_yes_no_website_select').change(function() {
       encryption_yes_no_website_current.data.datasets[0].data = encryption_yes_no_website[$('#encryption_yes_no_website_select').val()];
       encryption_yes_no_website_current.update();
@@ -264,7 +264,7 @@
     // quality website
     var encryption_quality_website_data = JSON.parse(JSON.stringify(encryption_quality_layout));
     encryption_quality_website_data['datasets'][0]['data'] = encryption_quality_website[$('#encryption_quality_website_select').val()];
-    var encryption_quality_website_current = new Chart(document.getElementById("encryption_quality_website_canvas").getContext("2d"), { type: 'doughnut', data: encryption_quality_web_data });
+    var encryption_quality_website_current = new Chart(document.getElementById("encryption_quality_website_canvas").getContext("2d"), { type: 'doughnut', data: encryption_quality_website_data });
     $('#encryption_quality_website_select').change(function() {
       encryption_quality_website_current.data.datasets[0].data = encryption_quality_website[$('#encryption_quality_website_select').val()];
       encryption_quality_website_current.update();
