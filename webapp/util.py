@@ -601,7 +601,7 @@ def ssl_check_summary_single(host_id):
       summary = 4
     if ssl_test.ssl_forward == 0 and summary > 4:
       summary = 4
-    if ssl_text.export_cipher == 1 and summary > 2:
+    if ssl_test.export_cipher == 1 and summary > 2:
       summary = 2
   
   host.ssl_result = summary

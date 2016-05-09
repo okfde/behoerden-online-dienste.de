@@ -268,6 +268,17 @@
     </div>
   </div>
   {% endif %}
+  {% if ssl_test.export_cipher %}
+  <div class="row-fluid">
+    <div class="col-sm-2 col-rating">
+      <span class="fa fa-minus-circle"></span>
+    </div>
+    <div class="col-sm-10">
+      <h2>{{ ssl_test.Host.host }} unterstützt die unsicheren EXPORT-Cipher.</h2>
+      <p>Diese sind mit voller Absicht unsicher und sollten daher deaktiviert werden. <a href="/info/encryption#export">Weitere Informationen.</a></p>
+    </div>
+  </div>
+  {% endif %}
   {% endif %}
 </div>
 {% endblock %}
