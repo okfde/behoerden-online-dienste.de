@@ -1373,13 +1373,17 @@ def generate_visualisations():
   visualisation_type = {}
   visualisation_region = {}
   visualisation_type_region = {}
+  visualisation_website_region = {}
   result_raw_type = {}
   result_raw_region = {}
   result_raw_type_region = {}
+  result_raw_website_region = {}
   
   for i in range(1, 17):
     visualisation_region[i] = get_visualisation('encryption_yes_no_%s' % i)
     result_raw_region[i] = [0, 0]
+    result_raw_website_region = get_visualisation('encryption_yes_no_website_%s' % i)
+    result_raw_website_region[i] = [0, 0]
   
   for i in range (1, 3):
     visualisation_type[i] = get_visualisation('encryption_yes_no_%s' % visualisation_type_deref[i])
@@ -1399,6 +1403,9 @@ def generate_visualisations():
       # Region related
       result_raw_region[int(region.rgs[0:2])][1 if host.ssl_result > 1 else 0] += 1
       result_raw_type_region[int(host.type)][int(region.rgs[0:2])][1 if host.ssl_result > 1 else 0] += 1
+    for service in host.services:
+      if service.id == 1:
+        result_raw_website_region[int(region.rgs[0:2])][1 if host.ssl_result > 1 else 0] += 1
   
   visualisation.data = json.dumps(result_raw)
   db.session.add(visualisation)
@@ -1407,6 +1414,9 @@ def generate_visualisations():
   for i in range(1, 17):
     visualisation_region[i].data = json.dumps(result_raw_region[i])
     db.session.add(visualisation_region[i])
+    db.session.commit()
+    visualisation_website_region[i].data = json.dumps(result_raw_website_region[i])
+    db.session.add(visualisation_website_region[i])
     db.session.commit()
   
   for i in range(1, 3):
@@ -1438,13 +1448,17 @@ def generate_visualisations():
   visualisation_type = {}
   visualisation_region = {}
   visualisation_type_region = {}
+  visualisation_website_region = {}
   result_raw_type = {}
   result_raw_region = {}
   result_raw_type_region = {}
+  result_raw_website_region = {}
   
   for i in range(1, 17):
     visualisation_region[i] = get_visualisation('encryption_quality_%s' % i)
     result_raw_region[i] = [0, 0, 0, 0, 0]
+    result_raw_website_region = get_visualisation('encryption_quality_website_%s' % i)
+    result_raw_website_region[i] = [0, 0, 0, 0, 0]
   
   for i in range (1, 3):
     visualisation_type[i] = get_visualisation('encryption_quality_%s' % visualisation_type_deref[i])
@@ -1464,6 +1478,10 @@ def generate_visualisations():
       # Region related
       result_raw_region[int(region.rgs[0:2])][host.ssl_result - 2] += 1
       result_raw_type_region[int(host.type)][int(region.rgs[0:2])][host.ssl_result - 2] += 1
+    for service in host.services:
+      if service.id == 1:
+        result_raw_website_region[int(region.rgs[0:2])][host.ssl_result - 2] += 1
+    
   
   visualisation.data = json.dumps(result_raw)
   db.session.add(visualisation)
@@ -1472,6 +1490,9 @@ def generate_visualisations():
   for i in range(1, 17):
     visualisation_region[i].data = json.dumps(result_raw_region[i])
     db.session.add(visualisation_region[i])
+    db.session.commit()
+    visualisation_website_region[i].data = json.dumps(result_raw_website_region[i])
+    db.session.add(visualisation_website_region[i])
     db.session.commit()
   
   for i in range(1, 3):
