@@ -121,6 +121,10 @@
   clear: both;
 }
 
+.col-rating {
+  padding-top: 10px;
+}
+
 .col-rating-ssl-1 i, .col-rating-ssl-2 i, .col-rating-ssl-3 i {
   color: #A94442;
 }
