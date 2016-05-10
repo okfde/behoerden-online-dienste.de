@@ -32,6 +32,7 @@ import util
 import json, time, os, datetime
 from subprocess import call
 from sqlalchemy import or_, desc, asc
+from sqlalchemy.sql.expression import func as sqlalchemy_func
 import re, time, elasticsearch
 
 URL_REGEX = re.compile(
@@ -71,7 +72,8 @@ URL_REGEX = re.compile(
 
 @app.route('/')
 def index():
-  return render_template('index.html')
+  example_host = Host.query.filter_by(active=1).filter_by(ssl_result=6).order_by(sqlalchemy_func.rand()).first()
+  return render_template('index.html', example_host=example_host)
 
 @app.route("/api/region-search-live")
 def region_search():
