@@ -113,7 +113,6 @@ def get_sslyze(host, host_type):
     if isinstance(plugin_result, sslyze.plugins.plugin_base.PluginRaisedExceptionResult):
       #plugins_process_pool.emergency_shutdown()
       if len(plugin_result.as_text()) == 2:
-        print plugin_result.as_text()
         if 'errors' not in result:
           result['errors'] = []
         result['errors'].append("%s: %s" % (plugin_result.as_text()[0], plugin_result.as_text()[1]))
