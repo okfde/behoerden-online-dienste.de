@@ -241,7 +241,7 @@
       <span class="fa fa-minus-circle"></span>
     </div>
     <div class="col-sm-10">
-      <h2>{{ ssl_test.Host.host }} hat eine unsichere TLS Renegotiation.</h2>
+      <h2>{{ ssl_test.Host.host }} hat eine unsichere TLS-Renegotiation.</h2>
       <p>Damit kann der Angreifer die Kommunikation auf eine schlechtere Verschlüsselung zwingen. <a href="/info/encryption#session-renegotiation">Weitere Informationen.</a></p>
     </div>
   </div>
@@ -286,7 +286,7 @@
     </div>
     <div class="col-sm-10">
       <h3 style="font-style: italic;">Fehler und Genauigkeit</h3>
-      <p style="font-style: italic;">Bei automatisierten Tests wie diesem kann es z.B. durch fehlerhafte Server, sehr scharf eingestellte Firewalls oder Netzausfällen zu Fehlern kommen. Als Sekundärquelle lohnt sich ein Test <a href="https://www.ssllabs.com/ssltest/analyze.html?d={{ ssl_test.Host.host }}">auf SSL Labs</a>. Wenn Sie ein Fehler finden, <a href="mailto:mail@ernestoruge.de">melden Sie ihn bitte</a>. Danke!</p>
+      <p style="font-style: italic;">Bei automatisierten Tests wie diesem kann es z. B. durch fehlerhafte Server, sehr scharf eingestellte Firewalls oder Netzausfällen zu Fehlern kommen. Als Sekundärquelle lohnt sich ein Test <a href="https://www.ssllabs.com/ssltest/analyze.html?d={{ ssl_test.Host.host }}">auf SSL-Labs</a>. Wenn Sie einen Fehler finden, <a href="mailto:mail@ernestoruge.de">melden Sie ihn bitte</a>. Danke!</p>
       {% if ssl_test.errors %}<p style="font-style: italic;">Folgende Fehler sind bei diesem Scanvorgang aufgetreten: {{  ssl_test.errors }}</p>{% endif %}
     </div>
   </div>
