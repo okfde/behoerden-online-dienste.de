@@ -213,6 +213,7 @@ class SslTest(db.Model):
   ssl_forward = db.Column(db.Integer())
   compression = db.Column(db.Integer())
   export_cipher = db.Column(db.Integer())
+  errors = db.Column(db.Text())
   
   host_id = db.Column(db.Integer, db.ForeignKey('host.id'))
 

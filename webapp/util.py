@@ -112,7 +112,13 @@ def get_sslyze(host, host_type):
   for plugin_result in plugins_process_pool.get_results():
     if isinstance(plugin_result, sslyze.plugins.plugin_base.PluginRaisedExceptionResult):
       #plugins_process_pool.emergency_shutdown()
-      print 'Scan command failed: {}'.format(plugin_result.as_text())
+      if len(plugin_result.as_text()) == 2:
+        print plugin_result.as_text()
+        if 'errors' not in result:
+          result['errors'] = []
+        result['errors'].append("%s: %s" % (plugin_result.as_text()[0], plugin_result.as_text()[1]))
+      else:
+        print 'Scan command failed: {}'.format(plugin_result.as_text())
     elif plugin_result.plugin_command in ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1' ,'tlsv1_2']:
       result, ciphers = ssl_protocols(result, plugin_result, plugin_result.plugin_command, ciphers)
     elif plugin_result.plugin_command == 'reneg':
@@ -189,192 +195,6 @@ def ssl_protocols(result, plugin_result, current_protocol, ciphers):
     del result['%s_cipher_accepted' % current_protocol]
   return (result, ciphers)
 
-def get_sslyze_old(host, host_type):
-  result = {
-    'ssl_ok': 1
-  }
-  ciphers = []
-  if host_type == '1':
-    data, error = subprocess.Popen(
-      ['python', app.config['SSLYZE_PATH'], '--xml_out=-', '--regular', '--hsts', '--timeout=20', '--sni=' + host,  host],
-      stdout=subprocess.PIPE,
-      stderr=subprocess.PIPE).communicate()
-  elif host_type == '2':
-    data, error = subprocess.Popen(
-      ['python', app.config['SSLYZE_PATH'], '--starttls=smtp', '--xml_out=-', '--regular', '--hsts', '--timeout=30', '--sni=' + host, '%s:25' % host],
-      stdout=subprocess.PIPE,
-      stderr=subprocess.PIPE).communicate()
-  print data
-  if not data:
-    return {'ssl_ok': 0}
-  parser = etree.XMLParser(recover=True)
-  tree = etree.fromstring(data, parser=parser)
-  for leaf in tree:
-    if leaf.tag == 'invalidTargets':
-      if len(leaf):
-        if leaf[0].attrib['error'] in ['Could not complete an SSL handshake', 'SMTP EHLO was rejected', 'SMTP STARTTLS not supported', 'Could not connect (timeout)']:
-          return {'ssl_ok': 0}
-    elif leaf.tag == 'results':
-      for target in leaf:
-        if target.attrib['host'] == host:
-          result['protocol_best'] = ''
-          result['protocol_num'] = 0
-          for module in target:
-            if module.tag == 'certinfo':
-              pass
-            elif module.tag == 'compression':
-              pass
-            elif module.tag == 'heartbleed':
-              if len(module):
-                for child in module:
-                  if child.tag == 'openSslHeartbleed':
-                    if child.attrib['isVulnerable'] == 'False':
-                      result['heartbleed'] = False
-                    else:
-                      result['heartbleed'] = True
-                  else:
-                    print "Unknown result in heartbleed reneg: %s" % child.tag
-              else:
-                result['heartbleed'] = False
-            elif module.tag == 'hsts':
-              for child in module:
-                if child.tag == 'httpStrictTransportSecurity':
-                  if child.attrib['isSupported'] == 'True':
-                    result['hsts_available'] = True
-                  else:
-                    result['hsts_available'] = False
-            elif module.tag == 'reneg':
-              for child in module:
-                if child.tag == 'sessionRenegotiation':
-                  if child.attrib['isSecure'] == 'False':
-                    result['session_renegotiation_secure'] = False
-                  else:
-                    result['session_renegotiation_secure'] = True
-                  if child.attrib['canBeClientInitiated'] == 'False':
-                    result['session_renegotiation_client'] = False
-                  else:
-                    result['session_renegotiation_client'] = True
-                else:
-                  print "Unknown result in module reneg: %s" % child.tag
-            elif module.tag == 'resum':
-              # not security relevant
-              pass
-            elif module.tag == 'openssl_ccs':
-              for child in module:
-                if child.tag == 'openSslCcsInjection':
-                  if child.attrib['isVulnerable'] == 'True':
-                    result['ccs_injection'] = True
-                  else:
-                    result['ccs_injection'] = False
-            elif module.tag == 'fallback':
-              for child in module:
-                if child.tag == 'tlsFallbackScsv':
-                  if child.attrib['isSupported'] == 'True':
-                    result['fallback_scsv_available'] = True
-                  else:
-                    result['fallback_scsv_available'] = False
-              pass
-            elif module.tag == 'certinfo_basic':
-              for child in module:
-                if child.tag == 'certificateChain':
-                  if child.attrib['hasSha1SignedCertificate'] == 'True':
-                    result['sha1_cert'] = 1
-                  else:
-                    result['sha1_cert'] = 0
-                if child.tag == 'certificateValidation':
-                  for subchild in child:
-                    if subchild.tag == 'hostnameValidation':
-                      if subchild.attrib['certificateMatchesServerHostname'] == 'True':
-                        result['cert_matches'] = True
-                      else:
-                        result['cert_matches'] = False
-                elif child.tag == 'ocspStapling':
-                  if child.attrib['isSupported'] == 'True':
-                    result['ocsp_stapling'] = True
-                  else:
-                    result['ocsp_stapling'] = False
-            elif module.tag == 'sslv2':
-              result, ciphers = ssl_protocols(host, module, result, ciphers, 'sslv2')
-            elif module.tag == 'sslv3':
-              result, ciphers = ssl_protocols(host, module, result, ciphers, 'sslv3')
-            elif module.tag == 'tlsv1':
-              result, ciphers = ssl_protocols(host, module, result, ciphers, 'tlsv1')
-            elif module.tag == 'tlsv1_1':
-              result, ciphers = ssl_protocols(host, module, result, ciphers, 'tlsv1_1')
-            elif module.tag == 'tlsv1_2':
-              result, ciphers = ssl_protocols(host, module, result, ciphers, 'tlsv1_2')
-            else:
-              print "Unknown module: %s" % module.tag
-        else:
-          print "Unknown host: %s" % target.attrib['host']
-    else:
-      print "Unknown leaf: %s" % leaf.tag
-  if not result['ssl_ok']:
-    return result
-  cipher_string = ' '.join(ciphers)
-  if result['tlsv1_2_available']:
-    result['protocol_best'] = 'tlsv1_2'
-  elif result['tlsv1_1_available']:
-    result['protocol_best'] = 'tlsv1_1'
-  elif result['tlsv1_available']:
-    result['protocol_best'] = 'tlsv1'
-  elif result['sslv3_available']:
-    result['protocol_best'] = 'sslv3'
-  elif result['sslv2_available']:
-    result['protocol_best'] = 'sslv2'
-  if result['protocol_num'] == 1:
-    result['fallback_scsv_available'] = 0
-  result['rc4_available'] = 'RC4' in cipher_string
-  result['md5_available'] = 'MD5' in cipher_string
-  result['pfs_available'] = 'ECDHE_' in cipher_string or 'DHE_' in cipher_string
-  result['anon_suite_available'] = 'anon_' in cipher_string
-  result['ssl_ok'] = 1
-  return result
-
-def ssl_protocols_old(host, module, result, ciphers, current_protocol):
-  if 'isProtocolSupported' not in module.attrib:
-    return ({'ssl_ok': 0}, '')
-  if module.attrib['isProtocolSupported'] == "True":
-    result['protocol_num'] += 1
-    result['%s_available' % current_protocol] = True
-  else:
-    result['%s_available' % current_protocol] = False
-  for child in module:
-    if child.tag == 'errors':
-      pass
-    elif child.tag == 'rejectedCipherSuites':
-      pass
-    elif child.tag == 'acceptedCipherSuites':
-      result['%s_cipher_accepted' % current_protocol] = []
-      for cipher_suite in child:
-        result['%s_cipher_accepted' % current_protocol].append(cipher_suite.attrib['name'])
-        if len(cipher_suite) and ('DHE_' == cipher_suite.attrib['name'][0:4] or 'TLS_DHE_' == cipher_suite.attrib['name'][0:8] or 'EXP_EDH_' in cipher_suite.attrib['name'] or 'EDH_' == cipher_suite.attrib['name'][0:4] or 'TLS_DH_' == cipher_suite.attrib['name'][0:7]):
-          if cipher_suite[0].tag == 'keyExchange':
-            if 'dhe_key' in result:
-              if int(cipher_suite[0].attrib['GroupSize']) < result['dhe_key']:
-                result['dhe_key'] = int(cipher_suite[0].attrib['GroupSize'])
-            else:
-              result['dhe_key'] = int(cipher_suite[0].attrib['GroupSize'])
-          else:
-            print "Unknown data in cipherSuite %s" % etree.tostring(cipher_suite)
-        elif len(cipher_suite) and ('ECDHE_' in cipher_suite.attrib['name'] or 'TLS_ECDH_' in cipher_suite.attrib['name']):
-          if cipher_suite[0].tag == 'keyExchange':
-            if 'ecdhe_key' in result:
-              if int(cipher_suite[0].attrib['GroupSize']) < result['ecdhe_key']:
-                result['ecdhe_key'] = int(cipher_suite[0].attrib['GroupSize'])
-            else:
-              result['ecdhe_key'] = int(cipher_suite[0].attrib['GroupSize'])
-          else:
-            print "%s: Unknown data in cipherSuite %s" % (host, etree.tostring(cipher_suite))
-        elif len(cipher_suite):
-          print "%s: Unknown data in cipherSuite %s" % (host, etree.tostring(cipher_suite))
-      ciphers += result['%s_cipher_accepted' % current_protocol]
-    elif child.tag == 'preferredCipherSuite':
-      result['%s_cipher_preferred' % current_protocol] = []
-      for cipher_suite in child:
-        result['%s_cipher_preferred' % current_protocol].append(cipher_suite.attrib['name'])
-  return (result, ciphers)
-
 def check_port_available(host, port):
   try:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -444,7 +264,10 @@ def ssl_check_single(host_id):
     elif 'port_25_available' in result:
       test_result.port_25_available = result['port_25_available']
     result.update(get_sslyze(host.host, host.type))
-
+    
+    if 'errors' in result:
+      print result['errors']
+      test_result.errors = '; '.join(result['errors'])
     if 'ssl_ok' in result:
       test_result.ssl_ok = result['ssl_ok']
       if test_result.ssl_ok:
