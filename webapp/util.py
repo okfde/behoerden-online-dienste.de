@@ -272,76 +272,77 @@ def ssl_check_single(host_id):
       if test_result.ssl_ok:
         if 'cert_matches' in result:
           test_result.cert_matches = result['cert_matches']
-          if 'rc4_available' in result:
-            test_result.rc4_available = result['rc4_available']
-          if 'md5_available' in result:
-            test_result.md5_available = result['md5_available']
-          if 'anon_suite_available' in result:
-            test_result.anon_suite_available = result['anon_suite_available']
-          if 'dhe_key' in result:
-            test_result.dhe_key = result['dhe_key']
-          if 'ecdhe_key' in result:
-            test_result.ecdhe_key = result['ecdhe_key']
-          if 'fallback_scsv_available' in result:
-            test_result.fallback_scsv_available = result['fallback_scsv_available']
-          if 'protocol_num' in result:
-            test_result.protocol_num = result['protocol_num']
-          if 'protocol_best' in result:
-            test_result.protocol_best = result['protocol_best']
-          if 'hsts_available' in result:
-            test_result.hsts_available = result['hsts_available']
-          if 'session_renegotiation_secure' in result:
-            test_result.session_renegotiation_secure = result['session_renegotiation_secure']
-          if 'session_renegotiation_client' in result:
-            test_result.session_renegotiation_client = result['session_renegotiation_client']
-          if 'heartbleed' in result:
-            test_result.heartbleed = result['heartbleed']
-          if 'sha1_cert' in result:
-            test_result.sha1_cert = result['sha1_cert']
-          if 'ocsp_stapling' in result:
-            test_result.ocsp_stapling = result['ocsp_stapling']
-          if 'pfs_available' in result:
-            test_result.pfs_available = result['pfs_available']
-          if 'ccs_injection' in result:
-            test_result.ccs_injection = result['ccs_injection']
-          if 'compression' in result:
-            test_result.compression = result['compression']
-          
-          if 'sslv2_available' in result:
-            test_result.sslv2_available = result['sslv2_available']
-          if 'sslv3_available' in result:
-            test_result.sslv3_available = result['sslv3_available']
-          if 'tlsv1_available' in result:
-            test_result.tlsv1_available = result['tlsv1_available']
-          if 'tlsv1_1_available' in result:
-            test_result.tlsv1_1_available = result['tlsv1_1_available']
-          if 'tlsv1_2_available' in result:
-            test_result.tlsv1_2_available = result['tlsv1_2_available']
-          
-          if 'sslv2_cipher_accepted' in result:
-            test_result.sslv2_cipher_accepted = ', '.join(result['sslv2_cipher_accepted'])
-          if 'sslv3_cipher_accepted' in result:
-            test_result.sslv3_cipher_accepted = ', '.join(result['sslv3_cipher_accepted'])
-          if 'tlsv1_cipher_accepted' in result:
-            test_result.tlsv1_cipher_accepted = ', '.join(result['tlsv1_cipher_accepted'])
-          if 'tlsv1_1_cipher_accepted' in result:
-            test_result.tlsv1_1_cipher_accepted = ', '.join(result['tlsv1_1_cipher_accepted'])
-          if 'tlsv1_2_cipher_accepted' in result:
-            test_result.tlsv1_2_cipher_accepted = ', '.join(result['tlsv1_2_cipher_accepted'])
-          
-          if 'sslv2_cipher_preferred' in result:
-            test_result.sslv2_cipher_preferred = result['sslv2_cipher_preferred']
-          if 'sslv3_cipher_preferred' in result:
-            test_result.sslv3_cipher_preferred = result['sslv3_cipher_preferred']
-          if 'tlsv1_cipher_preferred' in result:
-            test_result.tlsv1_cipher_preferred = result['tlsv1_cipher_preferred']
-          if 'tlsv1_1_cipher_preferred' in result:
-            test_result.tlsv1_1_cipher_preferred = result['tlsv1_1_cipher_preferred']
-          if 'tlsv1_2_cipher_preferred' in result:
-            test_result.tlsv1_2_cipher_preferred = result['tlsv1_2_cipher_preferred']
-          
-          if 'port_443_available' in result:
-            # make request to check if there is an forward
+        if 'rc4_available' in result:
+          test_result.rc4_available = result['rc4_available']
+        if 'md5_available' in result:
+          test_result.md5_available = result['md5_available']
+        if 'anon_suite_available' in result:
+          test_result.anon_suite_available = result['anon_suite_available']
+        if 'dhe_key' in result:
+          test_result.dhe_key = result['dhe_key']
+        if 'ecdhe_key' in result:
+          test_result.ecdhe_key = result['ecdhe_key']
+        if 'fallback_scsv_available' in result:
+          test_result.fallback_scsv_available = result['fallback_scsv_available']
+        if 'protocol_num' in result:
+          test_result.protocol_num = result['protocol_num']
+        if 'protocol_best' in result:
+          test_result.protocol_best = result['protocol_best']
+        if 'hsts_available' in result:
+          test_result.hsts_available = result['hsts_available']
+        if 'session_renegotiation_secure' in result:
+          test_result.session_renegotiation_secure = result['session_renegotiation_secure']
+        if 'session_renegotiation_client' in result:
+          test_result.session_renegotiation_client = result['session_renegotiation_client']
+        if 'heartbleed' in result:
+          test_result.heartbleed = result['heartbleed']
+        if 'sha1_cert' in result:
+          test_result.sha1_cert = result['sha1_cert']
+        if 'ocsp_stapling' in result:
+          test_result.ocsp_stapling = result['ocsp_stapling']
+        if 'pfs_available' in result:
+          test_result.pfs_available = result['pfs_available']
+        if 'ccs_injection' in result:
+          test_result.ccs_injection = result['ccs_injection']
+        if 'compression' in result:
+          test_result.compression = result['compression']
+        
+        if 'sslv2_available' in result:
+          test_result.sslv2_available = result['sslv2_available']
+        if 'sslv3_available' in result:
+          test_result.sslv3_available = result['sslv3_available']
+        if 'tlsv1_available' in result:
+          test_result.tlsv1_available = result['tlsv1_available']
+        if 'tlsv1_1_available' in result:
+          test_result.tlsv1_1_available = result['tlsv1_1_available']
+        if 'tlsv1_2_available' in result:
+          test_result.tlsv1_2_available = result['tlsv1_2_available']
+        
+        if 'sslv2_cipher_accepted' in result:
+          test_result.sslv2_cipher_accepted = ', '.join(result['sslv2_cipher_accepted'])
+        if 'sslv3_cipher_accepted' in result:
+          test_result.sslv3_cipher_accepted = ', '.join(result['sslv3_cipher_accepted'])
+        if 'tlsv1_cipher_accepted' in result:
+          test_result.tlsv1_cipher_accepted = ', '.join(result['tlsv1_cipher_accepted'])
+        if 'tlsv1_1_cipher_accepted' in result:
+          test_result.tlsv1_1_cipher_accepted = ', '.join(result['tlsv1_1_cipher_accepted'])
+        if 'tlsv1_2_cipher_accepted' in result:
+          test_result.tlsv1_2_cipher_accepted = ', '.join(result['tlsv1_2_cipher_accepted'])
+        
+        if 'sslv2_cipher_preferred' in result:
+          test_result.sslv2_cipher_preferred = result['sslv2_cipher_preferred']
+        if 'sslv3_cipher_preferred' in result:
+          test_result.sslv3_cipher_preferred = result['sslv3_cipher_preferred']
+        if 'tlsv1_cipher_preferred' in result:
+          test_result.tlsv1_cipher_preferred = result['tlsv1_cipher_preferred']
+        if 'tlsv1_1_cipher_preferred' in result:
+          test_result.tlsv1_1_cipher_preferred = result['tlsv1_1_cipher_preferred']
+        if 'tlsv1_2_cipher_preferred' in result:
+          test_result.tlsv1_2_cipher_preferred = result['tlsv1_2_cipher_preferred']
+        
+        if 'port_443_available' in result and 'cert_matches' in result:
+          # make request to check if there is an forward
+          if result['cert_matches']:
             try:
               request = requests.get('http://%s' % host.host, verify=False, timeout=30)
               if request.url[0:8] == 'https://':
@@ -368,8 +369,11 @@ def ssl_check_summary_single(host_id):
   
   # 1 = nicht existent, 2 = rotminus, 3 = rot, 4 = gelb, 5 = grün, 6 = grünplus
   summary = 1
+  if ssl_test.port_25_available and ssl_test.ssl_ok:
+    summary = 3
   if (ssl_test.port_443_available or ssl_test.port_25_available) and ssl_test.ssl_ok and ssl_test.cert_matches:
     summary = 6
+  if summary > 1:
     # bad ciphers
     if ssl_test.anon_suite_available and summary > 3:
       summary = 3
