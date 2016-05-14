@@ -12,7 +12,7 @@
 </div>
 <div class="container" id="result-box">
 {% include 'messages.html' %}
-  {% if (ssl_test.cert_matches and host.Host.type == 1) or (ssl_test.ssl_ok and host.Host.type == 2) %}
+  {% if (ssl_test.cert_matches and ssl_test.Host.type == 1) or (ssl_test.ssl_ok and ssl_test.Host.type == 2) %}
   <div class="row-fluid">
     <div class="col-sm-2 col-rating">
       <span class="fa fa-plus-circle"></span>
