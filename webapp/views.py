@@ -175,7 +175,7 @@ def region(region_slug):
       suggestion_data = {
         'url': url,
         'status': 1 if status == 1 else 0,
-        'region': region.id
+        'region': region.rgs
       }
       if service:
         suggestion_data['service'] = service

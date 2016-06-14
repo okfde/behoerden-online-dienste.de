@@ -114,7 +114,7 @@ def user_submission_accept(object_id):
     service_site.quality = 'online' if data['status'] else 'offline'
     service_site.quality_show = data['status']
     service_site.region_id = data['region']
-    region = Region.query.filter_by(id=data['region']).first()
+    region = Region.query.filter_by(rgs=data['region']).first()
     host = save_host(get_host(data['url']), region)
     service_site.host_id = host.id
     if 'service' in data:
