@@ -131,6 +131,9 @@ def user_submission_accept(object_id):
       service_site.service_id = service_id
     db.session.add(service_site)
     db.session.commit()
+    suggestion = Suggestion.query.filter_by(id=object_id).first()
+    db.session.delete(suggestion)
+    db.session.commit()
 
 def user_submission_deny(object_id):
   suggestion = Suggestion.query.filter_by(id=object_id).first()
